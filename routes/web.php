@@ -15,4 +15,102 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+})->name('home');
+
+// Public export route
+Route::get('/admin/leads/export', [App\Http\Controllers\Admin\LeadsController::class, 'export'])->name('admin.leads.export');
+
+// Public routes for sitemap
+Route::get('/projects', [App\Http\Controllers\ProjectsController::class, 'index'])->name('projects.index');
+Route::get('/projects/{slug}', [App\Http\Controllers\ProjectsController::class, 'show'])->name('projects.show');
+Route::get('/units', [App\Http\Controllers\UnitsController::class, 'index'])->name('units.index');
+Route::get('/units/{slug}', [App\Http\Controllers\UnitsController::class, 'show'])->name('units.show');
+Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
+// Protected admin dashboard routes
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    
+    // Projects CRUD
+    Route::get('/projects', [App\Http\Controllers\Admin\ProjectsController::class, 'index'])->name('projects.index');
+    Route::get('/projects/create', [App\Http\Controllers\Admin\ProjectsController::class, 'create'])->name('projects.create');
+    Route::post('/projects', [App\Http\Controllers\Admin\ProjectsController::class, 'store'])->name('projects.store');
+    Route::get('/projects/{project}', [App\Http\Controllers\Admin\ProjectsController::class, 'show'])->name('projects.show');
+    Route::get('/projects/{project}/edit', [App\Http\Controllers\Admin\ProjectsController::class, 'edit'])->name('projects.edit');
+    Route::put('/projects/{project}', [App\Http\Controllers\Admin\ProjectsController::class, 'update'])->name('projects.update');
+    Route::delete('/projects/{project}', [App\Http\Controllers\Admin\ProjectsController::class, 'destroy'])->name('projects.destroy');
+    Route::post('/projects/{project}/toggle-status', [App\Http\Controllers\Admin\ProjectsController::class, 'toggleStatus'])->name('projects.toggle-status');
+    Route::post('/projects/{project}/toggle-featured', [App\Http\Controllers\Admin\ProjectsController::class, 'toggleFeatured'])->name('projects.toggle-featured');
+    
+    // Units CRUD
+    Route::get('/units', [App\Http\Controllers\Admin\UnitsController::class, 'index'])->name('units.index');
+    Route::get('/units/create', [App\Http\Controllers\Admin\UnitsController::class, 'create'])->name('units.create');
+    Route::post('/units', [App\Http\Controllers\Admin\UnitsController::class, 'store'])->name('units.store');
+    Route::get('/units/{unit}', [App\Http\Controllers\Admin\UnitsController::class, 'show'])->name('units.show');
+    Route::get('/units/{unit}/edit', [App\Http\Controllers\Admin\UnitsController::class, 'edit'])->name('units.edit');
+    Route::put('/units/{unit}', [App\Http\Controllers\Admin\UnitsController::class, 'update'])->name('units.update');
+    Route::delete('/units/{unit}', [App\Http\Controllers\Admin\UnitsController::class, 'destroy'])->name('units.destroy');
+    
+    // Leads CRUD
+    Route::get('/leads', [App\Http\Controllers\Admin\LeadsController::class, 'index'])->name('leads.index');
+    Route::get('/leads/create', [App\Http\Controllers\Admin\LeadsController::class, 'create'])->name('leads.create');
+    Route::post('/leads', [App\Http\Controllers\Admin\LeadsController::class, 'store'])->name('leads.store');
+    Route::get('/leads/{lead}', [App\Http\Controllers\Admin\LeadsController::class, 'show'])->name('leads.show');
+    Route::get('/leads/{lead}/edit', [App\Http\Controllers\Admin\LeadsController::class, 'edit'])->name('leads.edit');
+    Route::put('/leads/{lead}', [App\Http\Controllers\Admin\LeadsController::class, 'update'])->name('leads.update');
+    Route::delete('/leads/{lead}', [App\Http\Controllers\Admin\LeadsController::class, 'destroy'])->name('leads.destroy');
+    Route::post('/leads/{lead}/update-status', [App\Http\Controllers\Admin\LeadsController::class, 'updateStatus'])->name('leads.update-status');
+    
+    // Blog CRUD
+    Route::get('/blog', [App\Http\Controllers\Admin\BlogController::class, 'index'])->name('blog.index');
+    Route::get('/blog/create', [App\Http\Controllers\Admin\BlogController::class, 'create'])->name('blog.create');
+    Route::post('/blog', [App\Http\Controllers\Admin\BlogController::class, 'store'])->name('blog.store');
+    Route::get('/blog/{blog}', [App\Http\Controllers\Admin\BlogController::class, 'show'])->name('blog.show');
+    Route::get('/blog/{blog}/edit', [App\Http\Controllers\Admin\BlogController::class, 'edit'])->name('blog.edit');
+    Route::put('/blog/{blog}', [App\Http\Controllers\Admin\BlogController::class, 'update'])->name('blog.update');
+    Route::delete('/blog/{blog}', [App\Http\Controllers\Admin\BlogController::class, 'destroy'])->name('blog.destroy');
+    
+    // Portfolio CRUD
+    Route::get('/portfolio', [App\Http\Controllers\Admin\PortfolioController::class, 'index'])->name('portfolio.index');
+    Route::get('/portfolio/create', [App\Http\Controllers\Admin\PortfolioController::class, 'create'])->name('portfolio.create');
+    Route::post('/portfolio', [App\Http\Controllers\Admin\PortfolioController::class, 'store'])->name('portfolio.store');
+    Route::get('/portfolio/{portfolio}', [App\Http\Controllers\Admin\PortfolioController::class, 'show'])->name('portfolio.show');
+    Route::get('/portfolio/{portfolio}/edit', [App\Http\Controllers\Admin\PortfolioController::class, 'edit'])->name('portfolio.edit');
+    Route::put('/portfolio/{portfolio}', [App\Http\Controllers\Admin\PortfolioController::class, 'update'])->name('portfolio.update');
+    Route::delete('/portfolio/{portfolio}', [App\Http\Controllers\Admin\PortfolioController::class, 'destroy'])->name('portfolio.destroy');
+    
+    // Media Manager
+    Route::get('/media', [App\Http\Controllers\Admin\MediaController::class, 'index'])->name('media.index');
+    Route::post('/media/upload', [App\Http\Controllers\Admin\MediaController::class, 'upload'])->name('media.upload');
+    Route::delete('/media/{media}', [App\Http\Controllers\Admin\MediaController::class, 'destroy'])->name('media.destroy');
+    
+    // Settings
+    Route::get('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings');
+    Route::post('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
 });
+
+// Search and Filtering Routes
+Route::get('/search/projects', [App\Http\Controllers\SearchController::class, 'searchProjects'])->name('search.projects');
+Route::get('/search/units', [App\Http\Controllers\SearchController::class, 'searchUnits'])->name('search.units');
+Route::get('/search/global', [App\Http\Controllers\SearchController::class, 'globalSearch'])->name('search.global');
+Route::get('/search/suggestions', [App\Http\Controllers\SearchController::class, 'getSearchSuggestions'])->name('search.suggestions');
+Route::get('/search/filters', [App\Http\Controllers\SearchController::class, 'getFilterOptions'])->name('search.filters');
+
+// SEO-friendly filter URLs
+Route::get('/units/{filters?}', [App\Http\Controllers\SearchController::class, 'unitsByFilters'])->name('units.filtered');
+Route::get('/projects/{filters?}', [App\Http\Controllers\SearchController::class, 'projectsByFilters'])->name('projects.filtered');
+
+// SEO Routes
+Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+Route::get('/sitemap', [App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap.xml');
+Route::get('/robots.txt', [App\Http\Controllers\SitemapController::class, 'robots'])->name('robots.txt');
+
+// Laravel Breeze authentication routes
+require __DIR__.'/auth.php';

@@ -1,2 +1,28 @@
 User-agent: *
-Disallow:
+Allow: /
+Allow: /projects
+Allow: /units
+Allow: /blog
+Allow: /storage/app/public/*
+Disallow: /admin
+Disallow: /auth
+Disallow: /storage
+Disallow: /vendor
+Disallow: /composer
+Disallow: /package.json
+Disallow: /webpack.mix.js
+Disallow: /.env
+Disallow: /.git
+Disallow: /node_modules
+
+# Allow search engines to find CSS and JS files
+Allow: /css/
+Allow: /js/
+Allow: /build/
+Allow: /assets/
+
+# Sitemap location
+Sitemap: {{ config('app.url') }}/sitemap.xml
+
+# Crawl delay for good bots
+Crawl-delay: 1
