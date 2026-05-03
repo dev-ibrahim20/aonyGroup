@@ -75,9 +75,11 @@ class PortfolioController extends Controller
             'featured' => 'boolean',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:255',
-            'main_image_id' => 'nullable|exists:media,id',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Create portfolio first
         $portfolio = Portfolio::create([
             'title_en' => $request->title_en,
             'title_ar' => $request->title_ar,
@@ -93,8 +95,50 @@ class PortfolioController extends Controller
             'featured' => $request->boolean('featured', false),
             'meta_title' => $request->meta_title,
             'meta_description' => $request->meta_description,
-            'main_image_id' => $request->main_image_id,
+            'main_image_id' => null,
         ]);
+
+        // Handle main image upload after portfolio creation
+        if ($request->hasFile('main_image')) {
+            $image = $request->file('main_image');
+            $path = $image->store('portfolio', 'public');
+            
+            $media = \App\Models\Media::create([
+                'mediable_type' => \App\Models\Portfolio::class,
+                'mediable_id' => $portfolio->id,
+                'type' => 'image',
+                'collection' => 'thumbnail',
+                'order' => 0,
+                'filename' => $image->getClientOriginalName(),
+                'path' => $path,
+                'url' => asset('storage/' . $path),
+                'mime_type' => $image->getMimeType(),
+                'size' => $image->getSize(),
+            ]);
+            
+            // Update portfolio with media ID
+            $portfolio->update(['main_image_id' => $media->id]);
+        }
+
+        // Handle gallery images
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $index => $image) {
+                $path = $image->store('portfolio/gallery', 'public');
+                
+                \App\Models\Media::create([
+                    'mediable_type' => \App\Models\Portfolio::class,
+                    'mediable_id' => $portfolio->id,
+                    'type' => 'image',
+                    'collection' => 'gallery',
+                    'order' => $index + 1, // Start from 1 to avoid conflict with main image (order 0)
+                    'filename' => $image->getClientOriginalName(),
+                    'path' => $path,
+                    'url' => asset('storage/' . $path),
+                    'mime_type' => $image->getMimeType(),
+                    'size' => $image->getSize(),
+                ]);
+            }
+        }
 
         return redirect()
             ->route('admin.portfolio.index')
@@ -121,6 +165,8 @@ class PortfolioController extends Controller
      */
     public function edit(Portfolio $portfolio)
     {
+        $portfolio->load('mainImage');
+        
         return view('admin.portfolio.edit', [
             'portfolio' => $portfolio,
             'pageTitle' => 'Edit Portfolio Item'
@@ -147,8 +193,44 @@ class PortfolioController extends Controller
             'featured' => 'boolean',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:255',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'main_image_id' => 'nullable|exists:media,id',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // Handle main image upload
+        $mainImageId = $request->main_image_id;
+        if ($request->hasFile('main_image')) {
+            // Delete old main image media record if exists
+            if ($portfolio->mainImage) {
+                $portfolio->mainImage->delete();
+            }
+            
+            // Also delete any existing thumbnail media record for this portfolio to avoid duplicate constraint
+            \App\Models\Media::where('mediable_type', \App\Models\Portfolio::class)
+                ->where('mediable_id', $portfolio->id)
+                ->where('collection', 'thumbnail')
+                ->where('order', 0)
+                ->delete();
+            
+            $image = $request->file('main_image');
+            $path = $image->store('portfolio', 'public');
+            
+            $media = \App\Models\Media::create([
+                'mediable_type' => \App\Models\Portfolio::class,
+                'mediable_id' => $portfolio->id,
+                'type' => 'image',
+                'collection' => 'thumbnail',
+                'order' => 0,
+                'filename' => $image->getClientOriginalName(),
+                'path' => $path,
+                'url' => asset('storage/' . $path),
+                'mime_type' => $image->getMimeType(),
+                'size' => $image->getSize(),
+            ]);
+            
+            $mainImageId = $media->id;
+        }
 
         $portfolio->update([
             'title_en' => $request->title_en,
@@ -165,8 +247,31 @@ class PortfolioController extends Controller
             'featured' => $request->boolean('featured', false),
             'meta_title' => $request->meta_title,
             'meta_description' => $request->meta_description,
-            'main_image_id' => $request->main_image_id,
+            'main_image_id' => $mainImageId,
         ]);
+
+        // Handle gallery images
+        if ($request->hasFile('gallery_images')) {
+            // Get current max order for this portfolio's gallery
+            $maxOrder = $portfolio->gallery()->max('order') ?? 0;
+            
+            foreach ($request->file('gallery_images') as $index => $image) {
+                $path = $image->store('portfolio/gallery', 'public');
+                
+                \App\Models\Media::create([
+                    'mediable_type' => \App\Models\Portfolio::class,
+                    'mediable_id' => $portfolio->id,
+                    'type' => 'image',
+                    'collection' => 'gallery',
+                    'order' => $maxOrder + $index + 1, // Continue from max order + 1
+                    'filename' => $image->getClientOriginalName(),
+                    'path' => $path,
+                    'url' => asset('storage/' . $path),
+                    'mime_type' => $image->getMimeType(),
+                    'size' => $image->getSize(),
+                ]);
+            }
+        }
 
         return redirect()
             ->route('admin.portfolio.index')
@@ -208,5 +313,20 @@ class PortfolioController extends Controller
         return redirect()
             ->back()
             ->with('success', 'Portfolio featured status updated!');
+    }
+
+    /**
+     * Remove gallery image.
+     */
+    public function removeGalleryImage(Request $request)
+    {
+        $media = \App\Models\Media::find($request->media_id);
+        
+        if ($media && $media->mediable_type === \App\Models\Portfolio::class) {
+            $media->delete();
+            return response()->json(['success' => true]);
+        }
+        
+        return response()->json(['success' => false], 404);
     }
 }

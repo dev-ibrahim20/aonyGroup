@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -32,7 +33,7 @@ class BlogController extends Controller
             });
         }
 
-        $blogs = $query->latest()->paginate(15);
+        $blogs = $query->with('featuredImage')->latest()->paginate(15);
 
         return view('admin.blog.index', [
             'blogs' => $blogs,
@@ -67,7 +68,7 @@ class BlogController extends Controller
             'featured' => 'boolean',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:255',
-            'featured_image_id' => 'nullable|exists:media,id',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'published_at' => 'nullable|date',
         ]);
 
@@ -86,6 +87,24 @@ class BlogController extends Controller
             'featured_image_id' => $request->featured_image_id,
             'published_at' => $request->published_at ?: ($request->status === 'published' ? now() : null),
         ]);
+
+        // Handle featured image upload
+        if ($request->hasFile('featured_image')) {
+            $image = $request->file('featured_image');
+            $path = $image->store('blog-featured', 'public');
+            
+            $media = Media::create([
+                'mediable_type' => Blog::class,
+                'mediable_id' => $blog->id,
+                'type' => 'image',
+                'url' => $path,
+                'title' => $image->getClientOriginalName(),
+                'collection' => 'thumbnail',
+                'order' => 0,
+            ]);
+            
+            $blog->update(['featured_image_id' => $media->id]);
+        }
 
         return redirect()
             ->route('admin.blog.index')
@@ -112,6 +131,8 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
+        $blog->load('featuredImage');
+        
         return view('admin.blog.edit', [
             'blog' => $blog,
             'pageTitle' => 'Edit Blog Post'
@@ -135,7 +156,7 @@ class BlogController extends Controller
             'featured' => 'boolean',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:255',
-            'featured_image_id' => 'nullable|exists:media,id',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'published_at' => 'nullable|date',
         ]);
 
@@ -154,6 +175,24 @@ class BlogController extends Controller
             'featured_image_id' => $request->featured_image_id,
             'published_at' => $request->published_at ?: ($request->status === 'published' && !$blog->published_at ? now() : $blog->published_at),
         ]);
+
+        // Handle featured image upload
+        if ($request->hasFile('featured_image')) {
+            $image = $request->file('featured_image');
+            $path = $image->store('blog-featured', 'public');
+            
+            $media = Media::create([
+                'mediable_type' => Blog::class,
+                'mediable_id' => $blog->id,
+                'type' => 'image',
+                'url' => $path,
+                'title' => $image->getClientOriginalName(),
+                'collection' => 'thumbnail',
+                'order' => 0,
+            ]);
+            
+            $blog->update(['featured_image_id' => $media->id]);
+        }
 
         return redirect()
             ->route('admin.blog.index')

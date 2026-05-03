@@ -20,7 +20,7 @@
                 <h5 class="mb-0">Project Information</h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.portfolio.store') }}" method="POST">
+                <form action="{{ route('admin.portfolio.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     
                     <!-- English Content -->
@@ -137,6 +137,47 @@
                         </div>
                     </div>
 
+                    <!-- Main Image -->
+                    <div class="mb-4">
+                        <h6 class="text-primary mb-3">
+                            <i class="fas fa-image me-2"></i> Main Image
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Project Main Image</label>
+                                <input type="file" name="main_image" class="form-control" accept="image/*" onchange="previewImage(this)">
+                                <small class="text-muted">Upload the main image for this portfolio item. Recommended size: 1200x800px.</small>
+                                <div id="imagePreview" class="mt-3" style="display: none;">
+                                    <img src="" alt="Image Preview" class="img-fluid rounded" style="max-height: 300px;">
+                                </div>
+                                @error('main_image')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Images -->
+                    <div class="mb-4">
+                        <h6 class="text-primary mb-3">
+                            <i class="fas fa-images me-2"></i> Project Gallery
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Gallery Images</label>
+                                <input type="file" name="gallery_images[]" class="form-control" accept="image/*" multiple onchange="previewGalleryImages(this)">
+                                <small class="text-muted">Select multiple images to upload to the project gallery. You can select JPG, PNG, GIF files.</small>
+                                <div id="galleryPreview" class="mt-3" style="display: none;">
+                                    <p class="text-muted mb-2">Gallery Preview:</p>
+                                    <div class="row g-2" id="galleryPreviewContainer"></div>
+                                </div>
+                                @error('gallery_images.*')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- SEO Settings -->
                     <div class="mb-4">
                         <h6 class="text-primary mb-3">
@@ -211,4 +252,55 @@
         </div>
     </div>
 </div>
+
+<script>
+function previewImage(input) {
+    const preview = document.getElementById('imagePreview');
+    const previewImg = preview.querySelector('img');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        preview.style.display = 'none';
+    }
+}
+
+function previewGalleryImages(input) {
+    const preview = document.getElementById('galleryPreview');
+    const container = document.getElementById('galleryPreviewContainer');
+    
+    // Clear previous previews
+    container.innerHTML = '';
+    
+    if (input.files && input.files.length > 0) {
+        preview.style.display = 'block';
+        
+        Array.from(input.files).forEach((file, index) => {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const col = document.createElement('div');
+                col.className = 'col-md-3';
+                col.innerHTML = `
+                    <img src="${e.target.result}" alt="Gallery Preview ${index + 1}" class="img-fluid rounded" style="height: 100px; object-fit: cover; width: 100%;">
+                    <small class="text-muted d-block text-center mt-1">${file.name}</small>
+                `;
+                container.appendChild(col);
+            };
+            
+            reader.readAsDataURL(file);
+        });
+    } else {
+        preview.style.display = 'none';
+    }
+}
+</script>
+
 @endsection

@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\ProjectsController;
+use App\Http\Controllers\Admin\UnitsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,18 +24,39 @@ Route::get('/', function () {
 Route::get('/admin/leads/export', [App\Http\Controllers\Admin\LeadsController::class, 'export'])->name('admin.leads.export');
 
 // Public routes for sitemap
-Route::get('/projects', [App\Http\Controllers\ProjectsController::class, 'index'])->name('projects.index');
-Route::get('/projects/{slug}', [App\Http\Controllers\ProjectsController::class, 'show'])->name('projects.show');
-Route::get('/units', [App\Http\Controllers\UnitsController::class, 'index'])->name('units.index');
-Route::get('/units/{slug}', [App\Http\Controllers\UnitsController::class, 'show'])->name('units.show');
-Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
-Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
+Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
+Route::get('/projects/{slug}', [ProjectsController::class, 'show'])->name('projects.show');
+Route::get('/units', [UnitsController::class, 'index'])->name('units.index');
+Route::get('/units/{slug}', [UnitsController::class, 'show'])->name('units.show');
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
 Route::get('/about', function () {
     return view('about');
 })->name('about');
+
+// API routes (outside auth middleware for JavaScript access)
+Route::get('/api/projects/{project}/units', [App\Http\Controllers\Admin\UnitsController::class, 'getProjectUnits']);
+
+// Test route for debugging
+Route::get('/test-api/{id}', function ($id) {
+    $project = \App\Models\Project::find($id);
+    if (!$project) {
+        return response()->json(['error' => 'Project not found'], 404);
+    }
+    
+    $units = $project->units()->select('id', 'title_en', 'title_ar', 'price')->get();
+    
+    return response()->json([
+        'success' => true,
+        'project_id' => $project->id,
+        'project_name' => $project->title_en,
+        'units_count' => $units->count(),
+        'units' => $units
+    ]);
+});
 
 // Protected admin dashboard routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -76,6 +100,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/blog/{blog}/edit', [App\Http\Controllers\Admin\BlogController::class, 'edit'])->name('blog.edit');
     Route::put('/blog/{blog}', [App\Http\Controllers\Admin\BlogController::class, 'update'])->name('blog.update');
     Route::delete('/blog/{blog}', [App\Http\Controllers\Admin\BlogController::class, 'destroy'])->name('blog.destroy');
+    Route::post('/blog/{blog}/toggle-status', [App\Http\Controllers\Admin\BlogController::class, 'toggleStatus'])->name('blog.toggle-status');
+    Route::post('/blog/{blog}/toggle-featured', [App\Http\Controllers\Admin\BlogController::class, 'toggleFeatured'])->name('blog.toggle-featured');
     
     // Portfolio CRUD
     Route::get('/portfolio', [App\Http\Controllers\Admin\PortfolioController::class, 'index'])->name('portfolio.index');
@@ -85,6 +111,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/portfolio/{portfolio}/edit', [App\Http\Controllers\Admin\PortfolioController::class, 'edit'])->name('portfolio.edit');
     Route::put('/portfolio/{portfolio}', [App\Http\Controllers\Admin\PortfolioController::class, 'update'])->name('portfolio.update');
     Route::delete('/portfolio/{portfolio}', [App\Http\Controllers\Admin\PortfolioController::class, 'destroy'])->name('portfolio.destroy');
+    Route::post('/portfolio/{portfolio}/toggle-status', [App\Http\Controllers\Admin\PortfolioController::class, 'toggleStatus'])->name('portfolio.toggle-status');
+    Route::post('/portfolio/{portfolio}/toggle-featured', [App\Http\Controllers\Admin\PortfolioController::class, 'toggleFeatured'])->name('portfolio.toggle-featured');
+    Route::delete('/media/{media}/remove', [App\Http\Controllers\Admin\PortfolioController::class, 'removeGalleryImage'])->name('admin.media.remove');
     
     // Media Manager
     Route::get('/media', [App\Http\Controllers\Admin\MediaController::class, 'index'])->name('media.index');

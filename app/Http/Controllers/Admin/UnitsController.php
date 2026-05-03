@@ -194,6 +194,26 @@ class UnitsController extends Controller
     }
 
     /**
+     * Get units for a specific project.
+     */
+    public function getProjectUnits(Project $project)
+    {
+        \Log::info('Fetching units for project ID: ' . $project->id);
+        
+        $units = $project->units()->select('id', 'title_en', 'title_ar', 'price')->get();
+        
+        \Log::info('Found ' . $units->count() . ' units for project: ' . $project->title_en);
+        
+        return response()->json([
+            'success' => true,
+            'project_id' => $project->id,
+            'project_name' => $project->title_en,
+            'units_count' => $units->count(),
+            'units' => $units
+        ]);
+    }
+
+    /**
      * Toggle unit status.
      */
     public function toggleStatus(Unit $unit)

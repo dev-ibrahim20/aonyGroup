@@ -95,6 +95,38 @@
                         </div>
                     </div>
 
+                    <!-- Project & Unit Information -->
+                    <div class="mb-4">
+                        <h6 class="text-primary mb-3">
+                            <i class="fas fa-building me-2"></i> Project & Unit Information
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Project</label>
+                                <select name="project_id" class="form-select" id="projectSelect">
+                                    <option value="">Select Project</option>
+                                    @foreach(App\Models\Project::all() as $project)
+                                        <option value="{{ $project->id }}" {{ old('project_id') == $project->id ? 'selected' : '' }}>
+                                            {{ $project->title_en }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('project_id')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Unit</label>
+                                <select name="unit_id" class="form-select" id="unitSelect">
+                                    <option value="">Select Unit (Optional)</option>
+                                </select>
+                                @error('unit_id')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Additional Information -->
                     <div class="mb-4">
                         <h6 class="text-primary mb-3">
@@ -187,4 +219,54 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const projectSelect = document.getElementById('projectSelect');
+    const unitSelect = document.getElementById('unitSelect');
+    
+    projectSelect.addEventListener('change', function() {
+        const projectId = this.value;
+        
+        console.log('Project selected:', projectId);
+        
+        // Clear current units
+        unitSelect.innerHTML = '<option value="">Select Unit (Optional)</option>';
+        
+        if (projectId) {
+            console.log('Fetching units for project ID:', projectId);
+            
+            // Fetch units for selected project ONLY
+            fetch(`/api/projects/${projectId}/units`)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.json();
+                })
+                .then(response => {
+                    console.log('Response received:', response);
+                    
+                    if (response.success && response.units) {
+                        console.log('Units received:', response.units);
+                        console.log('Number of units:', response.units_count);
+                        
+                        response.units.forEach(unit => {
+                            const option = document.createElement('option');
+                            option.value = unit.id;
+                            option.textContent = unit.title_en;
+                            unitSelect.appendChild(option);
+                        });
+                    } else {
+                        console.log('No units found or invalid response');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading units:', error);
+                    console.error('Error details:', error.message);
+                });
+        } else {
+            console.log('No project selected, clearing units');
+        }
+    });
+});
+</script>
 @endsection

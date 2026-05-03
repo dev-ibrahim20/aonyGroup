@@ -79,6 +79,8 @@ class LeadsController extends Controller
             'status' => 'required|in:new,contacted,qualified,closed,lost',
             'notes' => 'nullable|string',
             'assigned_to' => 'nullable|exists:users,id',
+            'project_id' => 'nullable|exists:projects,id',
+            'unit_id' => 'nullable|exists:units,id',
         ]);
 
         $lead = Lead::create([
@@ -91,6 +93,8 @@ class LeadsController extends Controller
             'status' => $request->status,
             'notes' => $request->notes,
             'assigned_to' => $request->assigned_to,
+            'project_id' => $request->project_id,
+            'unit_id' => $request->unit_id,
         ]);
 
         return redirect()
@@ -103,6 +107,8 @@ class LeadsController extends Controller
      */
     public function show(Lead $lead)
     {
+        $lead->load(['project', 'unit', 'assignedUser']);
+        
         return view('admin.leads.show', [
             'lead' => $lead,
             'pageTitle' => 'Lead Details'
@@ -114,6 +120,8 @@ class LeadsController extends Controller
      */
     public function edit(Lead $lead)
     {
+        $lead->load(['project', 'unit', 'assignedUser']);
+        
         return view('admin.leads.edit', [
             'lead' => $lead,
             'pageTitle' => 'Edit Lead'
@@ -135,6 +143,8 @@ class LeadsController extends Controller
             'status' => 'required|in:new,contacted,qualified,closed,lost',
             'notes' => 'nullable|string',
             'assigned_to' => 'nullable|exists:users,id',
+            'project_id' => 'nullable|exists:projects,id',
+            'unit_id' => 'nullable|exists:units,id',
         ]);
 
         $lead->update([
@@ -147,6 +157,8 @@ class LeadsController extends Controller
             'status' => $request->status,
             'notes' => $request->notes,
             'assigned_to' => $request->assigned_to,
+            'project_id' => $request->project_id,
+            'unit_id' => $request->unit_id,
         ]);
 
         return redirect()

@@ -23,7 +23,7 @@
                 <h5 class="mb-0">Edit Project Information</h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.portfolio.update', $portfolio) }}" method="POST">
+                <form action="{{ route('admin.portfolio.update', $portfolio) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     
@@ -141,6 +141,87 @@
                         </div>
                     </div>
 
+                    <!-- Main Image -->
+                    <div class="mb-4">
+                        <h6 class="text-primary mb-3">
+                            <i class="fas fa-image me-2"></i> Main Image
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Project Main Image</label>
+                                <input type="file" name="main_image" class="form-control" accept="image/*" onchange="previewImage(this)">
+                                <small class="text-muted">Upload the main image for this portfolio item. Recommended size: 1200x800px. Leave empty to keep current image.</small>
+                                
+                                @if($portfolio->mainImage)
+                                    <div class="mt-3">
+                                        <p class="text-muted mb-2">Current Image:</p>
+                                        <img src="{{ $portfolio->mainImage->url }}" alt="{{ $portfolio->title_en }}" class="img-fluid rounded" style="max-height: 300px; border: 1px solid #dee2e6;">
+                                        <div class="mt-2">
+                                            <small class="text-muted">
+                                                File: {{ $portfolio->mainImage->filename }} | 
+                                                Size: {{ number_format($portfolio->mainImage->size / 1024, 2) }} KB | 
+                                                Type: {{ $portfolio->mainImage->mime_type }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                @endif
+                                
+                                <div id="imagePreview" class="mt-3" style="display: none;">
+                                    <p class="text-muted mb-2">New Image Preview:</p>
+                                    <img src="" alt="Image Preview" class="img-fluid rounded" style="max-height: 300px; border: 1px solid #28a745;">
+                                </div>
+                                @error('main_image')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Images -->
+                    <div class="mb-4">
+                        <h6 class="text-primary mb-3">
+                            <i class="fas fa-images me-2"></i> Project Gallery
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Gallery Images</label>
+                                
+                                <!-- Current Gallery Images -->
+                                @if($portfolio->gallery->count() > 0)
+                                    <div class="mb-3">
+                                        <p class="text-muted mb-2">Current Gallery Images:</p>
+                                        <div class="row g-2">
+                                            @foreach($portfolio->gallery()->orderBy('order')->get() as $media)
+                                                <div class="col-md-3">
+                                                    <div class="card">
+                                                        <img src="{{ $media->url }}" alt="{{ $media->filename }}" class="card-img-top" style="height: 120px; object-fit: cover;">
+                                                        <div class="card-body p-2">
+                                                            <small class="text-muted d-block">{{ $media->filename }}</small>
+                                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeGalleryImage({{ $media->id }})">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+                                
+                                <!-- Upload New Gallery Images -->
+                                <input type="file" name="gallery_images[]" class="form-control" accept="image/*" multiple onchange="previewGalleryImages(this)">
+                                <small class="text-muted">Select multiple images to upload to the project gallery. You can select JPG, PNG, GIF files.</small>
+                                <div id="galleryPreview" class="mt-3" style="display: none;">
+                                    <p class="text-muted mb-2">New Gallery Preview:</p>
+                                    <div class="row g-2" id="galleryPreviewContainer"></div>
+                                </div>
+                                @error('gallery_images.*')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- SEO Settings -->
                     <div class="mb-4">
                         <h6 class="text-primary mb-3">
@@ -168,15 +249,6 @@
 
                     <!-- Form Actions -->
                     <div class="d-flex justify-content-between">
-                        <div>
-                            <form action="{{ route('admin.portfolio.destroy', $portfolio) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this portfolio item?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="fas fa-trash me-2"></i> Delete Item
-                                </button>
-                            </form>
-                        </div>
                         <div>
                             <a href="{{ route('admin.portfolio.index') }}" class="btn btn-outline-secondary me-2">
                                 <i class="fas fa-times me-2"></i> Cancel
@@ -257,9 +329,90 @@
                             <i class="fas fa-star me-2"></i> Toggle Featured
                         </button>
                     </form>
+                    <form action="{{ route('admin.portfolio.destroy', $portfolio) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this portfolio item?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="fas fa-trash me-2"></i> Delete Portfolio
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+function previewImage(input) {
+    const preview = document.getElementById('imagePreview');
+    const previewImg = preview.querySelector('img');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        preview.style.display = 'none';
+    }
+}
+
+function previewGalleryImages(input) {
+    const preview = document.getElementById('galleryPreview');
+    const container = document.getElementById('galleryPreviewContainer');
+    
+    // Clear previous previews
+    container.innerHTML = '';
+    
+    if (input.files && input.files.length > 0) {
+        preview.style.display = 'block';
+        
+        Array.from(input.files).forEach((file, index) => {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const col = document.createElement('div');
+                col.className = 'col-md-3';
+                col.innerHTML = `
+                    <img src="${e.target.result}" alt="Gallery Preview ${index + 1}" class="img-fluid rounded" style="height: 100px; object-fit: cover; width: 100%;">
+                    <small class="text-muted d-block text-center mt-1">${file.name}</small>
+                `;
+                container.appendChild(col);
+            };
+            
+            reader.readAsDataURL(file);
+        });
+    } else {
+        preview.style.display = 'none';
+    }
+}
+
+function removeGalleryImage(mediaId) {
+    if (confirm('Are you sure you want to remove this image from the gallery?')) {
+        fetch(`/admin/media/${mediaId}/remove`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error removing image');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error removing image');
+        });
+    }
+}
+</script>
+
 @endsection

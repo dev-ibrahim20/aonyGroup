@@ -26,6 +26,7 @@ Route::prefix('v1')->group(function () {
     // Resource endpoints
     Route::get('/projects', [App\Http\Controllers\ProjectController::class, 'index']);
     Route::get('/projects/{slug}', [App\Http\Controllers\ProjectController::class, 'show']);
+    Route::get('/projects/{project}/units', [App\Http\Controllers\Admin\UnitsController::class, 'getProjectUnits']);
     Route::get('/units', [App\Http\Controllers\Admin\UnitsController::class, 'index']);
     Route::get('/units/{slug}', [App\Http\Controllers\Admin\UnitsController::class, 'show']);
 });

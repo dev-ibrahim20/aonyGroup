@@ -23,7 +23,7 @@
                 <h5 class="mb-0">Edit Post Information</h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.blog.update', $blog) }}" method="POST">
+                <form action="{{ route('admin.blog.update', $blog) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     
@@ -131,6 +131,36 @@
                         </div>
                     </div>
 
+                    <!-- Featured Image -->
+                    <div class="mb-4">
+                        <h6 class="text-primary mb-3">
+                            <i class="fas fa-image me-2"></i> Featured Image
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Featured Image</label>
+                                <input type="file" name="featured_image" class="form-control" accept="image/*">
+                                <small class="text-muted">Recommended size: 1200x800px, Max size: 2MB</small>
+                                @error('featured_image')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                                
+                                @if($blog->featuredImage)
+                                    <div class="mt-3">
+                                        <label class="form-label">Current Featured Image</label>
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ asset('storage/' . $blog->featuredImage->url) }}" alt="{{ $blog->title }}" class="img-thumbnail me-3" style="max-width: 100px; max-height: 100px;">
+                                            <div>
+                                                <small class="text-muted">{{ $blog->featuredImage->title }}</small><br>
+                                                <small class="text-muted">Image uploaded</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- SEO Settings -->
                     <div class="mb-4">
                         <h6 class="text-primary mb-3">
@@ -159,13 +189,9 @@
                     <!-- Form Actions -->
                     <div class="d-flex justify-content-between">
                         <div>
-                            <form action="{{ route('admin.blog.destroy', $blog) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this blog post?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="fas fa-trash me-2"></i> Delete Post
-                                </button>
-                            </form>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="fas fa-trash me-2"></i> Delete Post
+                            </button>
                         </div>
                         <div>
                             <a href="{{ route('admin.blog.index') }}" class="btn btn-outline-secondary me-2">
@@ -177,6 +203,62 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header border-0 bg-danger bg-gradient text-white">
+                    <h5 class="modal-title" id="deleteModalLabel">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Delete Blog Post Confirmation
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 p-3 mb-3">
+                            <i class="fas fa-trash-alt fa-3x text-danger"></i>
+                        </div>
+                        <h6 class="mb-3">Are you absolutely sure?</h6>
+                        <p class="text-muted mb-4">You're about to delete this blog post:</p>
+                        <div class="alert bg-light border-0 rounded-3 p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-blog text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">{{ $blog->title }}</h6>
+                                    <small class="text-muted">{{ $blog->status }}</small>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <small class="text-muted">ID: #{{ $blog->id }} | Created: {{ $blog->created_at->format('M d, Y') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning border-0 rounded-3 d-flex align-items-center" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <div>
+                            <strong>This action cannot be undone!</strong><br>
+                            <small>All associated data will be permanently removed.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                    <form action="{{ route('admin.blog.destroy', $blog) }}" method="POST" style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger px-4">
+                            <i class="fas fa-trash me-2"></i>Delete Post
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

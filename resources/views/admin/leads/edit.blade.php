@@ -7,6 +7,9 @@
         <p class="page-subtitle">Update lead information</p>
     </div>
     <div>
+        <button type="button" class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
+            <i class="fas fa-trash me-2"></i> Delete Lead
+        </button>
         <a href="{{ route('admin.leads.show', $lead) }}" class="btn btn-outline-info me-2">
             <i class="fas fa-eye me-2"></i> View Lead
         </a>
@@ -98,6 +101,41 @@
                         </div>
                     </div>
 
+                    <!-- Project & Unit Information -->
+                    <div class="mb-4">
+                        <h6 class="text-primary mb-3">
+                            <i class="fas fa-building me-2"></i> Project & Unit Information
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Project</label>
+                                <select name="project_id" class="form-select" id="projectSelect">
+                                    <option value="">Select Project</option>
+                                    @foreach(App\Models\Project::all() as $project)
+                                        <option value="{{ $project->id }}" {{ old('project_id', $lead->project_id) == $project->id ? 'selected' : '' }}>
+                                            {{ $project->title_en }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('project_id')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Unit</label>
+                                <select name="unit_id" class="form-select" id="unitSelect">
+                                    <option value="">Select Unit (Optional)</option>
+                                    @if($lead->unit)
+                                        <option value="{{ $lead->unit_id }}" selected>{{ $lead->unit->title_en }}</option>
+                                    @endif
+                                </select>
+                                @error('unit_id')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Additional Information -->
                     <div class="mb-4">
                         <h6 class="text-primary mb-3">
@@ -140,13 +178,7 @@
                     <!-- Form Actions -->
                     <div class="d-flex justify-content-between">
                         <div>
-                            <form action="{{ route('admin.leads.destroy', $lead) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this lead?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="fas fa-trash me-2"></i> Delete Lead
-                                </button>
-                            </form>
+                            <!-- Delete button moved to page header -->
                         </div>
                         <div>
                             <a href="{{ route('admin.leads.index') }}" class="btn btn-outline-secondary me-2">
@@ -219,4 +251,115 @@
         </div>
     </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-0 bg-danger bg-gradient text-white">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Delete Lead Confirmation
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 p-3 mb-3">
+                        <i class="fas fa-trash-alt fa-3x text-danger"></i>
+                    </div>
+                    <h6 class="mb-3">Are you absolutely sure?</h6>
+                    <p class="text-muted mb-4">You're about to delete this lead:</p>
+                    <div class="alert bg-light border-0 rounded-3 p-3">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-user text-primary"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-1">{{ $lead->name }}</h6>
+                                <small class="text-muted">{{ $lead->email }}</small>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <small class="text-muted">ID: #{{ $lead->id }} | Phone: {{ $lead->phone }} | Status: {{ ucfirst($lead->status) }}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-warning border-0 rounded-3 d-flex align-items-center" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <div>
+                        <strong>This action cannot be undone!</strong><br>
+                        <small>All associated data will be permanently removed.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 bg-light">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </button>
+                <form action="{{ route('admin.leads.destroy', $lead) }}" method="POST" style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger px-4">
+                        <i class="fas fa-trash me-2"></i>Delete Lead
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const projectSelect = document.getElementById('projectSelect');
+    const unitSelect = document.getElementById('unitSelect');
+    
+    projectSelect.addEventListener('change', function() {
+        const projectId = this.value;
+        
+        console.log('Project selected:', projectId);
+        
+        // Clear current units
+        unitSelect.innerHTML = '<option value="">Select Unit (Optional)</option>';
+        
+        if (projectId) {
+            console.log('Fetching units for project ID:', projectId);
+            
+            // Fetch units for selected project ONLY
+            fetch(`/api/projects/${projectId}/units`)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.json();
+                })
+                .then(response => {
+                    console.log('Response received:', response);
+                    
+                    if (response.success && response.units) {
+                        console.log('Units received:', response.units);
+                        console.log('Number of units:', response.units_count);
+                        
+                        response.units.forEach(unit => {
+                            const option = document.createElement('option');
+                            option.value = unit.id;
+                            option.textContent = unit.title_en;
+                            unitSelect.appendChild(option);
+                        });
+                    } else {
+                        console.log('No units found or invalid response');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading units:', error);
+                    console.error('Error details:', error.message);
+                });
+        } else {
+            console.log('No project selected, clearing units');
+        }
+    });
+    
+    // Load initial units if project is selected
+    if (projectSelect.value) {
+        projectSelect.dispatchEvent(new Event('change'));
+    }
+});
+</script>
 @endsection

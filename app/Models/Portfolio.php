@@ -11,10 +11,13 @@ class Portfolio extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'title',
+        'title_en',
+        'title_ar',
         'slug',
-        'excerpt',
-        'content',
+        'excerpt_en',
+        'excerpt_ar',
+        'description_en',
+        'description_ar',
         'category',
         'client_name',
         'project_date',
@@ -25,6 +28,7 @@ class Portfolio extends Model
         'meta_keywords',
         'status',
         'featured',
+        'main_image_id',
     ];
 
     protected $casts = [
@@ -38,9 +42,9 @@ class Portfolio extends Model
         return $this->morphMany(Media::class, 'mediable');
     }
 
-    public function featuredImage()
+    public function mainImage()
     {
-        return $this->morphOne(Media::class, 'mediable')->where('collection', 'featured');
+        return $this->belongsTo(Media::class, 'main_image_id');
     }
 
     public function gallery()
@@ -91,6 +95,21 @@ class Portfolio extends Model
     public function isAvailable()
     {
         return $this->status === 'active';
+    }
+
+    public function getTitleAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->title_ar : $this->title_en;
+    }
+
+    public function getExcerptAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->excerpt_ar : $this->excerpt_en;
+    }
+
+    public function getContentAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->description_ar : $this->description_en;
     }
 
     public function getTechnologiesListAttribute()

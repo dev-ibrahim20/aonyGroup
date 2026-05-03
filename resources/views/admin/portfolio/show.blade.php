@@ -131,6 +131,9 @@
             <div class="card-body text-center">
                 @if($portfolio->mainImage)
                     <img src="{{ $portfolio->mainImage->url }}" alt="{{ $portfolio->title }}" class="img-fluid rounded mb-3" style="max-height: 200px;">
+                @elseif($portfolio->gallery->isNotEmpty())
+                    <img src="{{ $portfolio->gallery()->first()->url }}" alt="{{ $portfolio->title }}" class="img-fluid rounded mb-3" style="max-height: 200px;">
+                    <div class="text-warning small mb-2">Showing first gallery image (no main image set)</div>
                 @else
                     <div class="bg-light rounded d-flex align-items-center justify-content-center mb-3" style="height: 200px;">
                         <i class="fas fa-image fa-3x text-muted"></i>
@@ -172,27 +175,21 @@
 </div>
 
 <!-- Media Gallery -->
-@if($portfolio->media->isNotEmpty())
+@if($portfolio->gallery->isNotEmpty())
 <div class="card mt-4">
     <div class="card-header">
-        <h5 class="mb-0">Media Gallery ({{ $portfolio->media->count() }})</h5>
+        <h5 class="mb-0">Project Gallery ({{ $portfolio->gallery->count() }} images)</h5>
     </div>
     <div class="card-body">
         <div class="row g-3">
-            @foreach($portfolio->media as $media)
+            @foreach($portfolio->gallery()->orderBy('order')->get() as $media)
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-body p-2 text-center">
-                        @if(str_contains($media->mime_type, 'image'))
-                            <img src="{{ $media->url }}" alt="{{ $media->alt_text }}" class="img-fluid rounded" style="height: 120px; object-fit: cover;">
-                        @else
-                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 120px;">
-                                <i class="fas fa-file fa-2x text-muted"></i>
-                            </div>
-                        @endif
+                        <img src="{{ $media->url }}" alt="{{ $media->filename }}" class="img-fluid rounded" style="height: 120px; object-fit: cover; width: 100%; cursor: pointer;" onclick="openImageModal('{{ $media->url }}', '{{ $media->filename }}')">
                         <div class="mt-2">
-                            <small class="text-muted d-block">{{ $media->collection }}</small>
-                            <small class="text-muted">{{ $media->size_formatted }}</small>
+                            <small class="text-muted d-block">{{ $media->filename }}</small>
+                            <small class="text-muted">{{ number_format($media->size / 1024, 2) }} KB</small>
                         </div>
                     </div>
                 </div>
@@ -201,5 +198,50 @@
         </div>
     </div>
 </div>
+@else
+<!-- No Gallery Images -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Project Gallery</h5>
+    </div>
+    <div class="card-body text-center">
+        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 150px;">
+            <div>
+                <i class="fas fa-images fa-3x text-muted mb-3"></i>
+                <div class="text-muted">No gallery images uploaded yet</div>
+                <a href="{{ route('admin.portfolio.edit', $portfolio) }}" class="btn btn-primary btn-sm mt-2">
+                    <i class="fas fa-plus me-2"></i>Add Gallery Images
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 @endif
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" src="" alt="" class="img-fluid rounded" style="max-height: 500px;">
+                <div class="mt-3">
+                    <small id="modalImageName" class="text-muted"></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openImageModal(imageUrl, imageName) {
+    document.getElementById('modalImage').src = imageUrl;
+    document.getElementById('modalImageName').textContent = imageName;
+    new bootstrap.Modal(document.getElementById('imageModal')).show();
+}
+</script>
+
 @endsection

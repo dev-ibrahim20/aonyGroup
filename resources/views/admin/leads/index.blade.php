@@ -128,13 +128,9 @@
                                 <a href="{{ route('admin.leads.edit', $lead) }}" class="btn-action btn-edit" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ route('admin.leads.destroy', $lead) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this lead?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-action btn-delete" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                <button type="button" class="btn-action btn-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $lead->id }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -164,4 +160,62 @@
         @endif
     </div>
 </div>
+
+<!-- Delete Modals for each lead -->
+@foreach($leads as $lead)
+    <div class="modal fade" id="deleteModal{{ $lead->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $lead->id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header border-0 bg-danger bg-gradient text-white">
+                    <h5 class="modal-title" id="deleteModalLabel{{ $lead->id }}">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Delete Lead Confirmation
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 p-3 mb-3">
+                            <i class="fas fa-trash-alt fa-3x text-danger"></i>
+                        </div>
+                        <h6 class="mb-3">Are you absolutely sure?</h6>
+                        <p class="text-muted mb-4">You're about to delete this lead:</p>
+                        <div class="alert bg-light border-0 rounded-3 p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-user text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">{{ $lead->name }}</h6>
+                                    <small class="text-muted">{{ $lead->email }}</small>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <small class="text-muted">ID: #{{ $lead->id }} | Phone: {{ $lead->phone }} | Status: {{ ucfirst($lead->status) }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning border-0 rounded-3 d-flex align-items-center" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <div>
+                            <strong>This action cannot be undone!</strong><br>
+                            <small>All associated data will be permanently removed.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                    <form action="{{ route('admin.leads.destroy', $lead) }}" method="POST" style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger px-4">
+                            <i class="fas fa-trash me-2"></i>Delete Lead
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endforeach
 @endsection

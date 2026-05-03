@@ -11,10 +11,13 @@ class Blog extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'title',
+        'title_en',
+        'title_ar',
         'slug',
-        'excerpt',
-        'content',
+        'excerpt_en',
+        'excerpt_ar',
+        'content_en',
+        'content_ar',
         'meta_title',
         'meta_description',
         'meta_keywords',
@@ -22,6 +25,7 @@ class Blog extends Model
         'featured',
         'published_at',
         'author_id',
+        'featured_image_id',
     ];
 
     protected $casts = [
@@ -41,7 +45,7 @@ class Blog extends Model
 
     public function featuredImage()
     {
-        return $this->morphOne(Media::class, 'mediable')->where('collection', 'featured');
+        return $this->belongsTo(Media::class, 'featured_image_id');
     }
 
     public function gallery()
@@ -87,5 +91,20 @@ class Blog extends Model
     public function isAvailable()
     {
         return $this->status === 'published' && $this->published_at <= now();
+    }
+
+    public function getTitleAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->title_ar : $this->title_en;
+    }
+
+    public function getExcerptAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->excerpt_ar : $this->excerpt_en;
+    }
+
+    public function getContentAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->content_ar : $this->content_en;
     }
 }

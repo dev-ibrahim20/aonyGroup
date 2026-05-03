@@ -48,6 +48,33 @@
                                 <span class="badge bg-secondary">{{ ucfirst($lead->source) }}</span>
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Project</label>
+                            <div>
+                                @if($lead->project)
+                                    <a href="{{ route('admin.projects.show', $lead->project) }}" class="text-primary">
+                                        {{ $lead->project->title_en }}
+                                    </a>
+                                @else
+                                    <span class="text-muted">No project assigned</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Unit</label>
+                            <div>
+                                @if($lead->unit)
+                                    <a href="{{ route('admin.units.show', $lead->unit) }}" class="text-primary">
+                                        {{ $lead->unit->title_en }}
+                                    </a>
+                                    @if($lead->unit->price)
+                                        <small class="text-muted">({{ number_format($lead->unit->price, 2) }} EGP)</small>
+                                    @endif
+                                @else
+                                    <span class="text-muted">No unit assigned</span>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">

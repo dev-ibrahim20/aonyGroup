@@ -16,6 +16,7 @@ class Lead extends Model
         'email',
         'message',
         'project_id',
+        'unit_id',
         'assigned_to',
         'source',
         'status',
@@ -29,6 +30,14 @@ class Lead extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    /**
+     * Get the unit that belongs to the lead.
+     */
+    public function unit(): BelongsTo
+    {
+        return $this->belongsTo(Unit::class);
     }
 
     /**

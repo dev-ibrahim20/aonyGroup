@@ -17,7 +17,7 @@ class LeadsExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
     */
     public function collection()
     {
-        return Lead::with('project')->get();
+        return Lead::with(['project', 'unit'])->get();
     }
 
     /**
@@ -33,6 +33,7 @@ class LeadsExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             'Source',
             'Message',
             'Project',
+            'Unit',
             'Assigned To',
             'Status',
             'Priority',
@@ -56,6 +57,7 @@ class LeadsExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             ucfirst($lead->source),
             $lead->message,
             $lead->project ? $lead->project->title_en : 'N/A',
+            $lead->unit ? $lead->unit->title_en : 'N/A',
             $lead->assigned_to ?: 'N/A',
             ucfirst($lead->status),
             ucfirst($lead->priority),

@@ -20,7 +20,7 @@
                 <h5 class="mb-0">Post Information</h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.blog.store') }}" method="POST">
+                <form action="{{ route('admin.blog.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     
                     <!-- English Content -->
@@ -123,6 +123,23 @@
                                     <input class="form-check-input" type="checkbox" name="featured" value="1" {{ old('featured') ? 'checked' : '' }}>
                                     <label class="form-check-label">Mark as featured post</label>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Featured Image -->
+                    <div class="mb-4">
+                        <h6 class="text-primary mb-3">
+                            <i class="fas fa-image me-2"></i> Featured Image
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Featured Image</label>
+                                <input type="file" name="featured_image" class="form-control" accept="image/*">
+                                <small class="text-muted">Recommended size: 1200x800px, Max size: 2MB</small>
+                                @error('featured_image')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                     </div>

@@ -59,11 +59,12 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Project</th>
+                        <th>Portfolio</th>
                         <th>Category</th>
                         <th>Client</th>
                         <th>Date</th>
                         <th>Status</th>
+                        <th>Gallery</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -107,6 +108,38 @@
                             @endif
                         </td>
                         <td>
+                            <div class="d-flex align-items-center">
+                                @if($portfolio->gallery->count() > 0)
+                                    <span class="badge bg-success me-2">
+                                        <i class="fas fa-images me-1"></i>{{ $portfolio->gallery->count() }}
+                                    </span>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <div class="dropdown-menu p-2" style="max-width: 300px;">
+                                            <div class="row g-2">
+                                                @foreach($portfolio->gallery()->take(4)->get() as $media)
+                                                    <div class="col-6">
+                                                <img src="{{ $media->url }}" alt="{{ $media->filename }}" class="img-fluid rounded" style="height: 60px; object-fit: cover; width: 100%;">
+                                            </div>
+                                                @endforeach
+                                            </div>
+                                            @if($portfolio->gallery->count() > 4)
+                                                <div class="text-center mt-2">
+                                                    <small class="text-muted">+{{ $portfolio->gallery->count() - 4 }} more</small>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @else
+                                    <span class="badge bg-secondary">
+                                        <i class="fas fa-images me-1"></i>0
+                                    </span>
+                                @endif
+                            </div>
+                        </td>
+                        <td>
                             <div class="table-actions">
                                 <a href="{{ route('admin.portfolio.show', $portfolio) }}" class="btn-action btn-view" title="View">
                                     <i class="fas fa-eye"></i>
@@ -114,19 +147,15 @@
                                 <a href="{{ route('admin.portfolio.edit', $portfolio) }}" class="btn-action btn-edit" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ route('admin.portfolio.destroy', $portfolio) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this portfolio item?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-action btn-delete" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                <button type="button" class="btn-action btn-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#deletePortfolioModal{{ $portfolio->id }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center py-4">
+                        <td colspan="7" class="text-center py-4">
                             <i class="fas fa-briefcase fa-3x text-muted mb-3"></i>
                             <div class="text-muted">No portfolio items found</div>
                             <a href="{{ route('admin.portfolio.create') }}" class="btn btn-primary mt-2">
@@ -151,3 +180,68 @@
     </div>
 </div>
 @endsection
+
+<!-- Delete Confirmation Modals -->
+@foreach($portfolios as $portfolio)
+<div class="modal fade" id="deletePortfolioModal{{ $portfolio->id }}" tabindex="-1" aria-labelledby="deletePortfolioModalLabel{{ $portfolio->id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deletePortfolioModalLabel{{ $portfolio->id }}">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirm Deletion
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning d-flex align-items-center" role="alert">
+                    <i class="fas fa-exclamation-triangle me-3"></i>
+                    <div>
+                        <strong>Warning:</strong> This action cannot be undone!
+                    </div>
+                </div>
+                
+                <p class="mb-3">Are you sure you want to delete this portfolio item?</p>
+                
+                <div class="bg-light rounded p-3 mb-3">
+                    <h6 class="text-primary mb-2">
+                        <i class="fas fa-briefcase me-2"></i>{{ $portfolio->title }}
+                    </h6>
+                    <div class="row text-sm">
+                        <div class="col-6">
+                            <strong>Category:</strong> {{ ucfirst($portfolio->category) }}
+                        </div>
+                        <div class="col-6">
+                            <strong>Status:</strong> 
+                            <span class="badge bg-{{ $portfolio->status === 'active' ? 'success' : ($portfolio->status === 'inactive' ? 'warning' : 'secondary') }}">
+                                {{ ucfirst($portfolio->status) }}
+                            </span>
+                        </div>
+                        @if($portfolio->client_name)
+                        <div class="col-12 mt-2">
+                            <strong>Client:</strong> {{ $portfolio->client_name }}
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                
+                <div class="text-muted small">
+                    <i class="fas fa-info-circle me-1"></i>
+                    All associated media files and data will be permanently removed.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </button>
+                <form action="{{ route('admin.portfolio.destroy', $portfolio) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Delete Portfolio
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
