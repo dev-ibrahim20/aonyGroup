@@ -15,10 +15,14 @@ class Media extends Model
         'mediable_id',
         'type',
         'collection',
+        'filename',
+        'path',
         'url',
+        'mime_type',
+        'size',
+        'order',
         'title',
         'description',
-        'order',
     ];
 
     protected $casts = [

@@ -105,6 +105,14 @@ class Project extends Model
     }
 
     /**
+     * Get the gallery images for the project.
+     */
+    public function gallery()
+    {
+        return $this->morphMany(Media::class, 'mediable')->where('type', 'image')->where('collection', 'gallery')->ordered();
+    }
+
+    /**
      * Get the floor plans for the project.
      */
     public function floorPlans()

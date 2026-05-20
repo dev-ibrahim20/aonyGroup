@@ -20,7 +20,7 @@
                 <h5 class="mb-0">Project Information</h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.projects.store') }}" method="POST">
+                <form action="{{ route('admin.projects.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     
                     <!-- English Content -->
@@ -177,16 +177,27 @@
                     <h6 class="fw-bold">Featured Projects</h6>
                     <p class="text-muted small">Featured projects appear prominently on the homepage and search results.</p>
                 </div>
-                <div class="card">
+                <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0">Project Images</h5>
+                <h6 class="mb-0">
+                    <i class="fas fa-images me-2"></i> Project Images
+                </h6>
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                    <label class="form-label">Upload Images</label>
-                    <input type="file" name="images[]" class="form-control" multiple accept="image/*">
-                    <small class="text-muted">You can upload multiple images. First image will be set as main image.</small>
-                    @error('images')
+                    <label class="form-label">Main Image *</label>
+                    <input type="file" name="main_image" class="form-control" accept="image/*">
+                    <small class="text-muted">This will be the primary image for the project.</small>
+                    @error('main_image')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Gallery Images</label>
+                    <input type="file" name="gallery_images[]" class="form-control" multiple accept="image/*">
+                    <small class="text-muted">Upload multiple images for the project gallery.</small>
+                    @error('gallery_images')
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
                 </div>

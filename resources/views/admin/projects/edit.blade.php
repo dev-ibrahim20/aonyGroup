@@ -23,7 +23,7 @@
                 <h5 class="mb-0">Edit Project Information</h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.projects.update', $project) }}" method="POST">
+                <form action="{{ route('admin.projects.update', $project) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     
@@ -216,9 +216,6 @@
             </div>
         </div>
     </div>
-            </div>
-        </div>
-    </div>
 
     <div class="col-lg-4">
         <!-- Project Info Card -->
@@ -255,45 +252,65 @@
         </div>
 
         <!-- Project Images -->
-        <div class="card">
+        <div class="card mb-4">
             <div class="card-header">
                 <h6 class="mb-0">
                     <i class="fas fa-images me-2"></i> Project Images ({{ $project->media->count() }})
                 </h6>
             </div>
             <div class="card-body">
-                <div class="mb-3">
-                    <label class="form-label">Upload Additional Images</label>
-                    <input type="file" name="images[]" class="form-control" multiple accept="image/*">
-                    <small class="text-muted">Upload additional images for the project gallery.</small>
-                </div>
-                
+                <!-- Current Images Display -->
                 @if($project->media->isNotEmpty())
-                    <div class="row g-2">
+                    <div class="row g-2 mb-3">
                         @foreach($project->media->where('type', 'image')->orderBy('order') as $media)
                         <div class="col-md-4">
                             <div class="position-relative">
                                 <img src="{{ $media->url }}" alt="{{ $media->title }}" class="img-fluid rounded" style="height: 80px; object-fit: cover; width: 100%;">
                                 @if($media->id === $project->main_image_id)
                                     <span class="badge bg-primary position-absolute top-0 start-0 m-1" style="font-size: 0.7rem;">
-                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i> Main
                                     </span>
                                 @endif
                             </div>
                         </div>
                         @endforeach
                     </div>
-                    <div class="mt-2">
+                    <div class="mb-3">
                         <a href="{{ route('admin.media.index') }}?filter[mediable_type]=App%5CModels%5CProject&filter[mediable_id]={{ $project->id }}" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-cog me-1"></i> Manage All Images
                         </a>
                     </div>
                 @else
-                    <div class="text-center py-3">
+                    <div class="text-center py-3 mb-3">
                         <i class="fas fa-images fa-2x text-muted mb-2"></i>
                         <div class="text-muted small">No images uploaded yet</div>
                     </div>
                 @endif
+                
+                <!-- Upload New Images -->
+                <hr class="my-3">
+                <div class="mb-3">
+                    <label class="form-label">Change Main Image</label>
+                    <input type="file" name="main_image" class="form-control" accept="image/*">
+                    <small class="text-muted">Upload a new main image to replace the current one.</small>
+                    @error('main_image')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Add Gallery Images</label>
+                    <input type="file" name="gallery_images[]" class="form-control" multiple accept="image/*">
+                    <small class="text-muted">Upload additional images for the project gallery.</small>
+                    @error('gallery_images')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="alert alert-info small">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Note:</strong> Supported formats: JPEG, PNG, JPG, GIF. Maximum size: 2MB per image.
+                </div>
             </div>
         </div>
 

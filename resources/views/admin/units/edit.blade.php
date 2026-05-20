@@ -235,11 +235,8 @@
             </div>
         </div>
     </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-lg-12">
+    <div class="col-lg-4">
         <!-- Unit Info Card -->
         <div class="card mb-4">
             <div class="card-header">

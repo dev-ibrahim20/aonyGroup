@@ -72,8 +72,8 @@
                         <td>
                             <div class="d-flex align-items-center">
                                 <div class="me-3">
-                                    @if($project->mainImage)
-                                        <img src="{{ $project->mainImage->url }}" alt="{{ $project->title }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                    @if($project->displayImage)
+                                        <img src="{{ $project->displayImage->url }}" alt="{{ $project->title }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
                                     @else
                                         <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                             <i class="fas fa-building text-muted"></i>

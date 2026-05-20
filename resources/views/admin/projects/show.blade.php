@@ -19,6 +19,18 @@
 <!-- Project Overview -->
 <div class="row g-4 mb-4">
     <div class="col-lg-8">
+        <!-- Main Image Display -->
+        @if($project->displayImage)
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Main Image</h5>
+            </div>
+            <div class="card-body p-0">
+                <img src="{{ $project->displayImage->url }}" alt="{{ $project->title }}" class="w-100" style="height: 400px; object-fit: cover;">
+            </div>
+        </div>
+        @endif
+        
         <div class="card">
             <div class="card-header">
                 <h5 class="mb-0">Project Information</h5>
