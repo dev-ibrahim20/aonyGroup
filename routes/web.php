@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\ProjectsController;
 use App\Http\Controllers\Admin\UnitsController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,25 +18,55 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('frontend.pages.home');
 })->name('home');
+
+// Language toggle route
+Route::get('/lang/{lang}', function ($lang) {
+    if (in_array($lang, ['en', 'ar'])) {
+        session()->put('locale', $lang);
+        app()->setLocale($lang);
+    }
+    return redirect()->back();
+})->name('lang.switch');
 
 // Public export route
 Route::get('/admin/leads/export', [App\Http\Controllers\Admin\LeadsController::class, 'export'])->name('admin.leads.export');
 
 // Public routes for sitemap
-Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
-Route::get('/projects/{slug}', [ProjectsController::class, 'show'])->name('projects.show');
+Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
 Route::get('/units', [UnitsController::class, 'index'])->name('units.index');
 Route::get('/units/{slug}', [UnitsController::class, 'show'])->name('units.show');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/contact', function () {
-    return view('contact');
+    return view('frontend.pages.contact');
 })->name('contact');
 Route::get('/about', function () {
-    return view('about');
+    return view('frontend.pages.about');
 })->name('about');
+Route::get('/services', function () {
+    return view('frontend.pages.services');
+})->name('services');
+Route::get('/portfolio', function () {
+    return view('frontend.pages.portfolio');
+})->name('portfolio');
+Route::get('/careers', function () {
+    return view('frontend.pages.careers');
+})->name('careers');
+Route::get('/faq', function () {
+    return view('frontend.pages.faq');
+})->name('faq');
+Route::get('/testimonials', function () {
+    return view('frontend.pages.testimonials');
+})->name('testimonials');
+Route::get('/privacy', function () {
+    return view('frontend.pages.privacy');
+})->name('privacy');
+Route::get('/terms', function () {
+    return view('frontend.pages.terms');
+})->name('terms');
 
 // API routes (outside auth middleware for JavaScript access)
 Route::get('/api/projects/{project}/units', [App\Http\Controllers\Admin\UnitsController::class, 'getProjectUnits']);

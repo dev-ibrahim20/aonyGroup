@@ -500,9 +500,9 @@
                 
                 <div class="user-menu dropdown" id="userMenu">
                     <div class="user-avatar">
-                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                        {{ auth()->check() ? strtoupper(substr(auth()->user()->name, 0, 1)) : 'U' }}
                     </div>
-                    <span>{{ auth()->user()->name }}</span>
+                    <span>{{ auth()->check() ? auth()->user()->name : 'User' }}</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
             </div>
