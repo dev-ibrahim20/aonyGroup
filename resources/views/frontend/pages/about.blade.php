@@ -187,7 +187,7 @@
                              alt="{{ __('Team Member') }}" 
                              class="w-100"
                              style="height: 300px; object-fit: cover;"
-                             onerror="this.src='{{ asset('images/avatar-placeholder.jpg') }}'">
+                             onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, var(--primary-color), var(--accent-color))'; this.parentElement.innerHTML='<div class=\'d-flex align-items-center justify-content-center h-100 text-white\'><i class=\'fas fa-user fa-3x\'></i></div>'">
                         <div class="card-body p-4">
                             <h5 class="fw-bold mb-1">{{ __('Team Member') }} {{ $i }}</h5>
                             <p class="text-gold small mb-2">{{ __('Executive Position') }}</p>

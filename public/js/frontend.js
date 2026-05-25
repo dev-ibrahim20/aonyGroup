@@ -1,30 +1,35 @@
 // Frontend Custom JavaScript
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize AOS
-    AOS.init({
-        duration: 800,
-        easing: 'slide',
-        once: true,
-        offset: 100
-    });
-    
-    // Hide loader when page is loaded
-    const hideLoader = function() {
+// Hide loader immediately
+window.addEventListener('load', function() {
+    setTimeout(function() {
         const loader = document.getElementById('loader');
         if (loader) {
-            loader.classList.add('hidden');
             loader.style.display = 'none';
+            loader.classList.add('hidden');
         }
-    };
-    
-    // Hide loader on window load
-    window.addEventListener('load', function() {
-        setTimeout(hideLoader, 500);
-    });
-    
-    // Fallback: hide loader after 3 seconds regardless
-    setTimeout(hideLoader, 3000);
+    }, 100);
+});
+
+// Fallback: hide loader after 2 seconds regardless
+setTimeout(function() {
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.style.display = 'none';
+        loader.classList.add('hidden');
+    }
+}, 2000);
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 800,
+            easing: 'slide',
+            once: true,
+            offset: 100
+        });
+    }
     
     // Navbar scroll effect
     const navbar = document.getElementById('mainNavbar');
@@ -241,74 +246,80 @@ document.addEventListener('DOMContentLoaded', function() {
 if (typeof $ !== 'undefined') {
     $(document).ready(function() {
         // Hero slider
-        $('.hero-slider').slick({
-            dots: true,
-            arrows: false,
-            infinite: true,
-            speed: 500,
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            autoplay: true,
-            autoplaySpeed: 5000,
-            fade: true
-        });
+        if ($('.hero-slider').length > 0) {
+            $('.hero-slider').slick({
+                dots: true,
+                arrows: false,
+                infinite: true,
+                speed: 500,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 5000,
+                fade: true
+            });
+        }
         
         // Testimonials slider
-        $('.testimonials-slider').slick({
-            dots: true,
-            arrows: true,
-            infinite: true,
-            speed: 500,
-            slidesToShow: 3,
-            slidesToScroll: 1,
-            autoplay: true,
-            autoplaySpeed: 5000,
-            responsive: [
-                {
-                    breakpoint: 1024,
-                    settings: {
-                        slidesToShow: 2
+        if ($('.testimonials-slider').length > 0) {
+            $('.testimonials-slider').slick({
+                dots: true,
+                arrows: true,
+                infinite: true,
+                speed: 500,
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 5000,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    },
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 1
+                        }
                     }
-                },
-                {
-                    breakpoint: 768,
-                    settings: {
-                        slidesToShow: 1
-                    }
-                }
-            ]
-        });
+                ]
+            });
+        }
         
         // Partners slider
-        $('.partners-slider').slick({
-            dots: false,
-            arrows: false,
-            infinite: true,
-            speed: 500,
-            slidesToShow: 5,
-            slidesToScroll: 1,
-            autoplay: true,
-            autoplaySpeed: 3000,
-            responsive: [
-                {
-                    breakpoint: 1024,
-                    settings: {
-                        slidesToShow: 4
+        if ($('.partners-slider').length > 0) {
+            $('.partners-slider').slick({
+                dots: false,
+                arrows: false,
+                infinite: true,
+                speed: 500,
+                slidesToShow: 5,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 3000,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 4
+                        }
+                    },
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 3
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 2
+                        }
                     }
-                },
-                {
-                    breakpoint: 768,
-                    settings: {
-                        slidesToShow: 3
-                    }
-                },
-                {
-                    breakpoint: 480,
-                    settings: {
-                        slidesToShow: 2
-                    }
-                }
-            ]
-        });
+                ]
+            });
+        }
     });
 }

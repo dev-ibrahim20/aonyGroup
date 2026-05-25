@@ -22,10 +22,10 @@
                             "{{ __('Excellent service and professionalism. The team delivered beyond our expectations. Highly recommended!') }}"
                         </p>
                         <div class="d-flex align-items-center">
-                            <img src="{{ asset('images/avatar-placeholder.jpg') }}" 
-                                    alt="{{ __('Client') }}" 
-                                    class="rounded-circle me-3"
-                                    style="width: 60px; height: 60px; object-fit: cover;">
+                            <div class="rounded-circle me-3 d-flex align-items-center justify-content-center"
+                                 style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-color), var(--accent-color));">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
                             <div>
                                 <h6 class="fw-bold mb-0">{{ __('Client Name') }} {{ $i }}</h6>
                                 <p class="small text-muted mb-0">{{ __('Property Investor') }}</p>

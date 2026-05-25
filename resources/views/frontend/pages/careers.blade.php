@@ -73,7 +73,7 @@
                         <i class="fas fa-users"></i>
                     </div>
                     <h5 class="fw-bold mb-2">{{ __('Great Culture') }}</h5>
-                    <p class="text-muted small">{{ _('Collaborative and inclusive work environment') }}</p>
+                    <p class="text-muted small">{{ __('Collaborative and inclusive work environment') }}</p>
                 </div>
             </div>
         </div>

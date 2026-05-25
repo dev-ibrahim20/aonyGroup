@@ -39,30 +39,41 @@
         
         <!-- Portfolio Grid -->
         <div class="row g-4" id="portfolio-grid">
-            @for($i = 1; $i <= 6; $i++)
+            @php
+                $portfolios = \App\Models\Portfolio::where('status', 'active')->get();
+                $categories = ['residential', 'commercial', 'mixed'];
+            @endphp
+            @foreach($portfolios as $index => $portfolio)
                 @php
-                    $categories = ['residential', 'commercial', 'mixed'];
-                    $category = $categories[($i - 1) % 3];
+                    $category = $categories[$index % 3];
+                    $media = $portfolio->media()->where('type', 'image')->first();
+                    $imageUrl = $media ? $media->url : 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop';
                 @endphp
-                <div class="col-lg-4 col-md-6 portfolio-item" data-category="{{ $category }}" data-aos="fade-up" data-aos-delay="{{ $i * 100 }}">
+                <div class="col-lg-4 col-md-6 portfolio-item" data-category="{{ $category }}" data-aos="fade-up" data-aos-delay="{{ ($index + 1) * 100 }}">
                     <div class="gallery-item">
-                        <img src="{{ asset('images/portfolio/portfolio-' . $i . '.jpg') }}" 
-                             alt="{{ __('Portfolio Item') }}" 
-                             class="w-100" 
+                        <img src="{{ $imageUrl }}"
+                             alt="{{ $portfolio->title }}"
+                             class="w-100"
                              style="height: 300px; object-fit: cover;"
-                             onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
+                             onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, var(--primary-color), var(--accent-color))'; this.parentElement.innerHTML='<div class=\'d-flex align-items-center justify-content-center h-100 text-white\'><span>{{ __('Image Not Available') }}</span></div>'">
                         <div class="gallery-overlay">
                             <div class="text-center text-white">
-                                <h5 class="fw-bold mb-2">{{ __('Completed Project') }} {{ $i }}</h5>
-                                <p class="small mb-3">{{ __('Cairo, Egypt') }}</p>
+                                <h5 class="fw-bold mb-2">{{ $portfolio->title }}</h5>
+                                <p class="small mb-3">{{ $portfolio->category }}</p>
+                                @if($portfolio->project_url)
+                                <a href="{{ $portfolio->project_url }}" target="_blank" class="btn btn-gold btn-sm">
+                                    {{ __('View Details') }}
+                                </a>
+                                @else
                                 <button class="btn btn-gold btn-sm">
                                     {{ __('View Details') }}
                                 </button>
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
-            @endfor
+            @endforeach
         </div>
     </div>
 </section>

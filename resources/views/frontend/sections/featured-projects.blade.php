@@ -19,84 +19,98 @@
         
         <!-- Projects Grid -->
         <div class="row g-4" id="projects-grid">
-            @for($i = 1; $i <= 6; $i++)
+            @php
+                $projects = \App\Models\Project::where('status', 'available')->orWhere('status', 'coming_soon')->get();
+                $categories = ['residential', 'commercial', 'mixed'];
+            @endphp
+            @foreach($projects as $index => $project)
                 @php
-                    $categories = ['residential', 'commercial', 'mixed'];
-                    $category = $categories[($i - 1) % 3];
+                    $category = $categories[$index % 3];
+                    $firstUnit = $project->units()->first();
+                    $price = $firstUnit ? $firstUnit->price : 0;
+                    $bedrooms = $firstUnit ? $firstUnit->bedrooms : 0;
+                    $bathrooms = $firstUnit ? $firstUnit->bathrooms : 0;
+                    $area = $firstUnit ? $firstUnit->area : 0;
+                    $media = $project->media()->where('type', 'image')->first();
+                    $imageUrl = $media ? $media->url : 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop';
                 @endphp
-                <div class="col-lg-4 col-md-6 project-item" data-category="{{ $category }}" data-aos="fade-up" data-aos-delay="{{ $i * 100 }}">
+                <div class="col-lg-4 col-md-6 project-item" data-category="{{ $category }}" data-aos="fade-up" data-aos-delay="{{ ($index + 1) * 100 }}">
                     <div class="project-card card-hover">
                         <div class="position-relative overflow-hidden">
-                            <img src="{{ asset('images/featured-' . $i . '.jpg') }}" 
-                                 alt="{{ __('Project') }}" 
-                                 class="w-100" 
+                            <img src="{{ $imageUrl }}"
+                                 alt="{{ $project->title_en }}"
+                                 class="w-100"
                                  style="height: 250px; object-fit: cover;"
-                                 onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
-                            
+                                 onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, var(--primary-color), var(--accent-color))'; this.parentElement.innerHTML='<div class=\'d-flex align-items-center justify-content-center h-100 text-white\'><span>{{ __('Image Not Available') }}</span></div>'">
+
                             <div class="position-absolute top-0 start-0 m-3">
-                                @if($i % 3 == 0)
+                                @if($project->status == 'coming_soon')
                                     <span class="badge bg-warning text-dark">{{ __('Coming Soon') }}</span>
-                                @elseif($i % 2 == 0)
+                                @elseif($project->status == 'sold_out')
                                     <span class="badge bg-danger">{{ __('Sold Out') }}</span>
                                 @else
                                     <span class="badge bg-success">{{ __('Available') }}</span>
                                 @endif
                             </div>
-                            
+
                             <div class="position-absolute top-0 end-0 m-3">
                                 <button class="btn btn-sm btn-gold rounded-circle wishlist-btn">
                                     <i class="far fa-heart"></i>
                                 </button>
                             </div>
                         </div>
-                        
+
                         <div class="p-4">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <span class="badge bg-light text-dark">{{ ucfirst($category) }}</span>
+                                @if($price > 0)
                                 <div class="text-gold fw-bold">
-                                    {{ number_format(3000000 + ($i * 500000)) }} EGP
+                                    {{ number_format($price) }} EGP
                                 </div>
+                                @endif
                             </div>
-                            
+
                             <h5 class="fw-bold mb-2">
-                                <a href="{{ route('projects.index') }}" class="text-decoration-none text-dark">
-                                    {{ __('Premium Project') }} {{ $i }}
+                                <a href="{{ route('projects.show', $project->slug) }}" class="text-decoration-none text-dark">
+                                    {{ app()->getLocale() == 'ar' ? $project->title_ar : $project->title_en }}
                                 </a>
                             </h5>
-                            
+
                             <p class="text-muted small mb-3">
                                 <i class="fas fa-map-marker-alt text-gold me-1"></i>
-                                {{ __('New Cairo, Egypt') }}
+                                {{ $project->location }}
                             </p>
-                            
+
+                            @if($firstUnit)
                             <div class="row g-2 mb-3">
                                 <div class="col-4">
                                     <div class="text-center p-2 bg-light rounded">
                                         <i class="fas fa-bed text-gold"></i>
-                                        <small class="d-block">{{ 2 + ($i % 3) }}</small>
+                                        <small class="d-block">{{ $bedrooms }}</small>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="text-center p-2 bg-light rounded">
                                         <i class="fas fa-bath text-gold"></i>
-                                        <small class="d-block">{{ 1 + ($i % 2) }}</small>
+                                        <small class="d-block">{{ $bathrooms }}</small>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="text-center p-2 bg-light rounded">
                                         <i class="fas fa-ruler-combined text-gold"></i>
-                                        <small class="d-block">{{ 100 + ($i * 20) }}m²</small>
+                                        <small class="d-block">{{ number_format($area) }}m²</small>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <a href="{{ route('projects.index') }}" class="btn btn-primary-custom w-100">
+                            @endif
+
+                            <a href="{{ route('projects.show', $project->slug) }}" class="btn btn-primary-custom w-100">
                                 {{ __('View Details') }}
                             </a>
                         </div>
                     </div>
                 </div>
-            @endfor
+            @endforeach
         </div>
         
         <div class="text-center mt-5">

@@ -13,19 +13,16 @@ class Unit extends Model
 
     protected $fillable = [
         'project_id',
-        'title_en',
-        'title_ar',
+        'title',
         'slug',
         'price',
         'area',
         'bedrooms',
         'bathrooms',
         'status',
-        'description_en',
-        'description_ar',
+        'description',
         'meta_title',
         'meta_description',
-        'display_image_id',
     ];
 
     protected $casts = [

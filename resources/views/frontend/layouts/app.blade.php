@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <!-- SEO Meta Tags -->
-    <title>{{ $seo_title ?? config('app.name') }}</title>
+    <title>@yield('title')</title>
     <meta name="description" content="{{ $seo_description ?? 'Aony Group - Premium Real Estate Development' }}">
     <meta name="keywords" content="{{ $seo_keywords ?? 'real estate, luxury properties, investment, development' }}">
     
@@ -485,13 +485,35 @@
     <script src="{{ asset('js/frontend.js') }}"></script>
     
     <script>
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            easing: 'slide',
-            once: true,
-            offset: 100
+        // Force hide loader after page load
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loader = document.getElementById('loader');
+                if (loader) {
+                    loader.style.display = 'none';
+                    loader.classList.add('hidden');
+                }
+            }, 500);
         });
+        
+        // Fallback: hide loader after 3 seconds
+        setTimeout(function() {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                loader.style.display = 'none';
+                loader.classList.add('hidden');
+            }
+        }, 3000);
+        
+        // Initialize AOS
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                duration: 800,
+                easing: 'slide',
+                once: true,
+                offset: 100
+            });
+        }
         
         // Back to Top Button
         window.addEventListener('scroll', function() {

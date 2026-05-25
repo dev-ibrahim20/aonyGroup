@@ -12,19 +12,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        // Create admin user if not exists
+        \App\Models\User::firstOrCreate(
+            ['email' => 'admin@admin.com'],
+            [
+                'name' => 'Admin',
+                'password' => \Illuminate\Support\Facades\Hash::make('admin1234'),
+                'email_verified_at' => now(),
+            ]
+        );
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
-        // Create admin user
-        \App\Models\User::create([
-            'name' => 'Admin',
-            'email' => 'admin@admin.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('admin1234'),
-            'email_verified_at' => now(),
+        // Seed data
+        $this->call([
+            ProjectSeeder::class,
+            UnitSeeder::class,
+            BlogSeeder::class,
+            PortfolioSeeder::class,
+            MediaSeeder::class,
+            LeadSeeder::class,
         ]);
     }
 }

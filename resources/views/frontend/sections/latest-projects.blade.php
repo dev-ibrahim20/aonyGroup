@@ -16,7 +16,7 @@
                                  alt="{{ __('Project') }}" 
                                  class="w-100" 
                                  style="height: 300px; object-fit: cover;"
-                                 onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
+                                 onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, var(--primary-color), var(--accent-color))'; this.parentElement.innerHTML='<div class=\'d-flex align-items-center justify-content-center h-100 text-white\'><span>{{ __('Image Not Available') }}</span></div>'">
                             
                             <div class="position-absolute top-0 start-0 m-3">
                                 <span class="badge bg-gold">{{ __('New') }}</span>
