@@ -62,6 +62,10 @@ return [
     'And Growing' => 'And Growing',
     'Awards Won' => 'Awards Won',
     'Industry Recognition' => 'Industry Recognition',
+    'Portfolio Projects' => 'Portfolio Projects',
+    'Successfully Delivered' => 'Successfully Delivered',
+    'Units Available' => 'Units Available',
+    'Ready to Move In' => 'Ready to Move In',
     
     // Why Choose Us
     'Why Choose Us' => 'Why Choose Us',

@@ -12,7 +12,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::available()->featured()->paginate(12);
+        $projects = Project::available()->paginate(12);
         
         // SEO data for listing page
         $seoData = [

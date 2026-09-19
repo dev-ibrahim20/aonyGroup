@@ -1,9 +1,10 @@
 User-agent: *
 Allow: /
-Allow: /projects
-Allow: /units
-Allow: /blog
-Allow: /storage/app/public/*
+Allow: /real-estate-investment
+Allow: /real-estate-development
+Allow: /construction
+Allow: /real-estate-marketing
+Allow: /engineering-consultancy
 Disallow: /admin
 Disallow: /auth
 Disallow: /storage

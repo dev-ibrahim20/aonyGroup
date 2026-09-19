@@ -62,6 +62,10 @@ return [
     'And Growing' => 'في تزايد',
     'Awards Won' => 'جائزة فازت',
     'Industry Recognition' => 'اعتراف الصناعة',
+    'Portfolio Projects' => 'مشاريع في المعرض',
+    'Successfully Delivered' => 'تم تسليمها بنجاح',
+    'Units Available' => 'وحدات متاحة',
+    'Ready to Move In' => 'جاهزة للسكن',
     
     // Why Choose Us
     'Why Choose Us' => 'لماذا تختارنا',
