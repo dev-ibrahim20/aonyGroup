@@ -31,7 +31,7 @@
         
         /* Hero Section with Background Slider */
         .hero-section {
-            min-height: 85vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -72,26 +72,128 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.65) 50%, rgba(255, 255, 255, 0.55) 100%);
+            background: transparent;
             z-index: 1;
         }
         
         .hero-content {
             position: relative;
             z-index: 10;
-            text-align: center;
-            animation: fadeInUp 1.2s ease-out;
+            width: 100%;
+            max-width: 1400px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         
-        @keyframes fadeInUp {
+        .hero-initial {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeInCenter 1s ease-out;
+        }
+        
+        @keyframes fadeInCenter {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: scale(0.8);
             }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .hero-full {
+            display: none;
+            width: 100%;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .hero-full.active {
+            display: grid;
+            animation: fadeInContent 1s ease-out;
+        }
+        
+        @keyframes fadeInContent {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .hero-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: slideToRight 1s ease-out;
+        }
+        
+        @keyframes slideToRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .hero-info {
+            animation: slideToLeft 1s ease-out;
+        }
+        
+        @keyframes slideToLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .info-item {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-right: 4px solid #ffc107;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .info-item.show {
+            animation: fadeInItem 0.5s ease-out forwards;
+        }
+        
+        @keyframes fadeInItem {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+        
+        .info-item h3 {
+            color: #ffc107;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-item p {
+            color: #ffffff;
+            font-size: 1rem;
+            line-height: 1.6;
         }
         
         .logo-container {
@@ -122,9 +224,9 @@
         .main-title {
             font-size: 4.5rem;
             font-weight: 900;
-            color: #2c3e50;
+            color: #ffffff;
             margin-bottom: 1rem;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
         }
         
         .main-title span {
@@ -134,60 +236,121 @@
             background-clip: text;
         }
         
-        .subtitle {
-            font-size: 1.4rem;
-            color: #495057;
-            margin-bottom: 2rem;
+        .hero-brand .main-title {
+            font-size: 3rem;
+            margin-top: 1rem;
         }
         
         /* Sections Section with Horizontal Animation */
         .sections-section {
-            padding: 4rem 2rem;
+            padding: 6rem 2rem;
             position: relative;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            overflow: hidden;
         }
-        
+
+        .sections-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 193, 7, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 50%, rgba(255, 152, 0, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .sections-section h2 {
+            color: #ffffff;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .sections-wrapper {
+            position: relative;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            border: none;
+            color: #1a1a2e;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 193, 7, 0.4);
+            z-index: 10;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 193, 7, 0.6);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+
         .sections-container {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
             overflow-x: auto;
             padding: 2rem 0;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            scroll-snap-type: x mandatory;
         }
-        
+
         .sections-container::-webkit-scrollbar {
             display: none;
         }
-        
+
         .section-card {
-            flex: 0 0 350px;
-            background: rgba(255, 255, 255, 0.95);
+            flex: 0 0 450px;
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
-            border: 2px solid rgba(0, 0, 0, 0.05);
-            border-radius: 25px;
-            padding: 2.5rem;
-            cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
             overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: slideInFromRight 1s ease-out forwards;
             opacity: 0;
+            scroll-snap-align: start;
         }
-        
+
         @keyframes slideInFromRight {
             from {
                 opacity: 0;
-                transform: translateX(100px);
+                transform: translateX(100px) rotateY(20deg);
             }
             to {
                 opacity: 1;
-                transform: translateX(0);
+                transform: translateX(0) rotateY(0deg);
             }
         }
-        
+
         .section-card::before {
             content: '';
             position: absolute;
@@ -195,11 +358,12 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(255, 152, 0, 0.15) 100%);
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.5s ease;
+            z-index: 1;
         }
-        
+
         .section-card::after {
             content: '';
             position: absolute;
@@ -207,72 +371,94 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255, 193, 7, 0.2) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 193, 7, 0.3) 0%, transparent 70%);
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.5s ease;
+            z-index: 1;
         }
-        
+
         .section-card:hover::before {
             opacity: 1;
         }
-        
+
         .section-card:hover::after {
             opacity: 1;
         }
-        
+
         .section-card:hover {
-            transform: translateY(-15px) scale(1.05);
-            box-shadow: 0 30px 60px rgba(255, 193, 7, 0.3);
-            border-color: rgba(255, 193, 7, 0.5);
+            transform: translateY(-20px) scale(1.08) rotateX(5deg);
+            box-shadow: 0 40px 80px rgba(255, 193, 7, 0.4);
+            border-color: rgba(255, 193, 7, 0.6);
         }
-        
+
         .section-card:nth-child(1) { animation-delay: 0.2s; }
         .section-card:nth-child(2) { animation-delay: 0.4s; }
         .section-card:nth-child(3) { animation-delay: 0.6s; }
         .section-card:nth-child(4) { animation-delay: 0.8s; }
         .section-card:nth-child(5) { animation-delay: 1s; }
-        
+
+        .card-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.6s ease;
+        }
+
+        .section-card:hover .card-image {
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
         .icon-container {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 2.8rem;
-            box-shadow: 0 15px 35px rgba(255, 193, 7, 0.4);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: -40px auto 1.5rem;
+            font-size: 2.5rem;
+            box-shadow: 0 15px 35px rgba(255, 193, 7, 0.5);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
-            z-index: 2;
+            z-index: 3;
+            border: 4px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .section-card:hover .icon-container {
-            transform: scale(1.2) rotate(360deg);
-            box-shadow: 0 20px 50px rgba(255, 193, 7, 0.6);
+            transform: scale(1.3) rotate(360deg);
+            box-shadow: 0 25px 50px rgba(255, 193, 7, 0.7);
         }
-        
+
         .section-title {
-            color: #2c3e50;
-            font-size: 1.6rem;
+            color: #ffffff;
+            font-size: 1.8rem;
             font-weight: 800;
             text-align: center;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
             position: relative;
             z-index: 2;
             transition: color 0.3s ease;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
-        
+
         .section-card:hover .section-title {
-            color: #ff9800;
+            color: #ffc107;
         }
-        
+
         .section-description {
-            color: #6c757d;
+            color: rgba(255, 255, 255, 0.8);
             text-align: center;
-            font-size: 0.95rem;
-            line-height: 1.7;
+            font-size: 1rem;
+            line-height: 1.8;
             position: relative;
             z-index: 2;
         }
@@ -317,26 +503,7 @@
             left: 100%;
         }
         
-        .scroll-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 2rem;
-        }
-        
-        .scroll-dot {
-            width: 12px;
-            height: 12px;
-            background: rgba(255, 193, 7, 0.3);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .scroll-dot.active {
-            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
-            transform: scale(1.2);
-        }
+
         
         .pulse-ring {
             position: absolute;
@@ -346,7 +513,7 @@
             border-radius: 50%;
             animation: pulseRing 2s infinite;
         }
-        
+
         @keyframes pulseRing {
             0% {
                 transform: scale(1);
@@ -363,85 +530,144 @@
             .main-title {
                 font-size: 4rem;
             }
-            
+
+            .hero-brand .main-title {
+                font-size: 2.5rem;
+            }
+
             .logo-container {
                 width: 160px;
                 height: 160px;
                 font-size: 4rem;
             }
-            
+
             .section-card {
-                flex: 0 0 300px;
+                flex: 0 0 380px;
+            }
+
+            .card-image {
+                height: 240px;
+            }
+
+            .hero-full {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-brand {
+                margin-bottom: 2rem;
             }
         }
-        
+
         @media (max-width: 768px) {
             .hero-section {
-                min-height: 70vh;
+                height: 100vh;
             }
-            
+
             .main-title {
                 font-size: 2.8rem;
             }
-            
-            .subtitle {
-                font-size: 1.1rem;
+
+            .hero-brand .main-title {
+                font-size: 2rem;
             }
-            
+
             .logo-container {
                 width: 140px;
                 height: 140px;
                 font-size: 3.5rem;
             }
-            
+
             .section-card {
-                flex: 0 0 280px;
-                padding: 2rem;
+                flex: 0 0 320px;
             }
-            
+
+            .card-image {
+                height: 200px;
+            }
+
             .icon-container {
                 width: 70px;
                 height: 70px;
                 font-size: 2.2rem;
             }
-            
+
             .section-title {
                 font-size: 1.3rem;
             }
-            
+
             .section-description {
                 font-size: 0.9rem;
             }
+
+            .hero-full {
+                padding: 1rem;
+            }
+
+            .info-item {
+                padding: 1rem;
+            }
+
+            .nav-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
         }
-        
+
         @media (max-width: 480px) {
             .main-title {
                 font-size: 2.2rem;
             }
-            
-            .subtitle {
-                font-size: 1rem;
+
+            .hero-brand .main-title {
+                font-size: 1.8rem;
             }
-            
+
             .logo-container {
                 width: 120px;
                 height: 120px;
                 font-size: 3rem;
             }
-            
+
             .section-card {
-                flex: 0 0 250px;
-                padding: 1.5rem;
+                flex: 0 0 280px;
             }
-            
+
+            .card-image {
+                height: 180px;
+            }
+
             .icon-container {
                 width: 60px;
                 height: 60px;
                 font-size: 1.8rem;
             }
-            
+
             .section-title {
                 font-size: 1.2rem;
+            }
+
+            .hero-content {
+                padding: 1rem;
+            }
+
+            .info-item {
+                padding: 0.75rem;
+            }
+
+            .info-item h3 {
+                font-size: 1rem;
+            }
+
+            .info-item p {
+                font-size: 0.9rem;
+            }
+
+            .nav-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
             }
         }
     </style>
@@ -462,77 +688,116 @@
         <div class="hero-overlay"></div>
         
         <div class="hero-content">
-            <div class="logo-container">
-                <div class="pulse-ring"></div>
-                🏢
+            <!-- Initial View: Logo and Company Name -->
+            <div class="hero-initial" id="heroInitial">
+                <div class="logo-container">
+                    <div class="pulse-ring"></div>
+                    🏢
+                </div>
+                <h1 class="main-title">شركة <span>العوني</span> العقارية</h1>
             </div>
-            <h1 class="main-title">شركة <span>العوني</span> العقارية</h1>
-            <p class="subtitle">شريكك الموثوق في عالم العقارات</p>
+            
+            <!-- Full View: Brand on one side, Info on the other -->
+            <div class="hero-full" id="heroFull">
+                <div class="hero-brand">
+                    <div class="logo-container">
+                        <div class="pulse-ring"></div>
+                        🏢
+                    </div>
+                    <h1 class="main-title">شركة <span>العوني</span> العقارية</h1>
+                </div>
+                
+                <div class="hero-info">
+                    <div class="info-item" id="visionItem">
+                        <h3>🎯 رؤيتنا</h3>
+                        <p>أن نكون الخيار الأول والمفضل في السوق العقاري من خلال تقديم خدمات استثنائية تتجاوز توقعات عملائنا.</p>
+                    </div>
+                    
+                    <div class="info-item" id="missionItem">
+                        <h3>🚀 رسالتنا</h3>
+                        <p>نقدم حلولاً عقارية شاملة ومبتكرة تضمن لعملائنا أعلى عوائد الاستثمار مع الحفاظ على أعلى معايير الجودة.</p>
+                    </div>
+                    
+                    <div class="info-item" id="valuesItem">
+                        <h3>💎 قيمنا</h3>
+                        <p>النزاهة، الاحترافية، الابتكار، والالتزام بخدمة عملائنا بأعلى معايير الجودة والأمانة.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
     <!-- Sections Section with Horizontal Animation -->
     <div class="sections-section">
         <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">اختر القسم الذي تريد استكشافه</h2>
-        
-        <div class="sections-container" id="sectionsContainer">
-            <div class="section-card" onclick="navigateToSection('real-estate-investment')">
-                <div class="shine-effect"></div>
-                <div class="icon-container">
-                    <div class="pulse-ring"></div>
-                    🏢
-                </div>
-                <h3 class="section-title">الاستثمار العقاري</h3>
-                <p class="section-description">فرص استثمارية استراتيجية في العقارات بأعلى عوائد</p>
+
+        <div class="sections-wrapper">
+            <div class="nav-buttons">
+                <button class="nav-btn" id="prevBtn" onclick="scrollSections('prev')">→</button>
+                <button class="nav-btn" id="nextBtn" onclick="scrollSections('next')">←</button>
             </div>
-            
-            <div class="section-card" onclick="navigateToSection('real-estate-development')">
-                <div class="shine-effect"></div>
-                <div class="icon-container">
-                    <div class="pulse-ring"></div>
-                    🏗️
+
+            <div class="sections-container" id="sectionsContainer">
+                <div class="section-card" onclick="navigateToSection('real-estate-investment')">
+                    <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="الاستثمار العقاري" class="card-image">
+                    <div class="card-content">
+                        <div class="icon-container">
+                            <div class="pulse-ring"></div>
+                            🏢
+                        </div>
+                        <h3 class="section-title">الاستثمار العقاري</h3>
+                        <p class="section-description">فرص استثمارية استراتيجية في العقارات بأعلى عوائد</p>
+                    </div>
                 </div>
-                <h3 class="section-title">التطوير العقاري</h3>
-                <p class="section-description">تطوير مشاريع عقارية مبتكرة بمعايير عالمية</p>
-            </div>
-            
-            <div class="section-card" onclick="navigateToSection('construction')">
-                <div class="shine-effect"></div>
-                <div class="icon-container">
-                    <div class="pulse-ring"></div>
-                    🔨
+
+                <div class="section-card" onclick="navigateToSection('real-estate-development')">
+                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="التطوير العقاري" class="card-image">
+                    <div class="card-content">
+                        <div class="icon-container">
+                            <div class="pulse-ring"></div>
+                            🏗️
+                        </div>
+                        <h3 class="section-title">التطوير العقاري</h3>
+                        <p class="section-description">تطوير مشاريع عقارية مبتكرة بمعايير عالمية</p>
+                    </div>
                 </div>
-                <h3 class="section-title">المقاولات</h3>
-                <p class="section-description">تنفيذ مشاريع البناء بأعلى جودة وكفاءة</p>
-            </div>
-            
-            <div class="section-card" onclick="navigateToSection('real-estate-marketing')">
-                <div class="shine-effect"></div>
-                <div class="icon-container">
-                    <div class="pulse-ring"></div>
-                    📊
+
+                <div class="section-card" onclick="navigateToSection('construction')">
+                    <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="المقاولات" class="card-image">
+                    <div class="card-content">
+                        <div class="icon-container">
+                            <div class="pulse-ring"></div>
+                            🔨
+                        </div>
+                        <h3 class="section-title">المقاولات</h3>
+                        <p class="section-description">تنفيذ مشاريع البناء بأعلى جودة وكفاءة</p>
+                    </div>
                 </div>
-                <h3 class="section-title">التسويق العقاري</h3>
-                <p class="section-description">استراتيجيات تسويقية ذكية لبيع وتأجير العقارات</p>
-            </div>
-            
-            <div class="section-card" onclick="navigateToSection('engineering-consultancy')">
-                <div class="shine-effect"></div>
-                <div class="icon-container">
-                    <div class="pulse-ring"></div>
-                    📐
+
+                <div class="section-card" onclick="navigateToSection('real-estate-marketing')">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="التسويق العقاري" class="card-image">
+                    <div class="card-content">
+                        <div class="icon-container">
+                            <div class="pulse-ring"></div>
+                            📊
+                        </div>
+                        <h3 class="section-title">التسويق العقاري</h3>
+                        <p class="section-description">استراتيجيات تسويقية ذكية لبيع وتأجير العقارات</p>
+                    </div>
                 </div>
-                <h3 class="section-title">مكتب الاستشارات الهندسية</h3>
-                <p class="section-description">استشارات هندسية متخصصة ودراسات فنية دقيقة</p>
+
+                <div class="section-card" onclick="navigateToSection('engineering-consultancy')">
+                    <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="مكتب الاستشارات الهندسية" class="card-image">
+                    <div class="card-content">
+                        <div class="icon-container">
+                            <div class="pulse-ring"></div>
+                            📐
+                        </div>
+                        <h3 class="section-title">مكتب الاستشارات الهندسية</h3>
+                        <p class="section-description">استشارات هندسية متخصصة ودراسات فنية دقيقة</p>
+                    </div>
+                </div>
             </div>
-        </div>
-        
-        <div class="scroll-indicator" id="scrollIndicator">
-            <div class="scroll-dot active" data-index="0"></div>
-            <div class="scroll-dot" data-index="1"></div>
-            <div class="scroll-dot" data-index="2"></div>
-            <div class="scroll-dot" data-index="3"></div>
-            <div class="scroll-dot" data-index="4"></div>
         </div>
     </div>
     
@@ -541,20 +806,20 @@
         function initBackgroundSlider() {
             const slides = document.querySelectorAll('.slide');
             let currentSlide = 0;
-            
+
             setInterval(() => {
                 slides[currentSlide].classList.remove('active');
                 currentSlide = (currentSlide + 1) % slides.length;
                 slides[currentSlide].classList.add('active');
             }, 4000); // Change slide every 4 seconds
         }
-        
+
         // إنشاء أشكال عائمة في الخلفية
         function createFloatingShapes() {
             const shapesContainer = document.getElementById('shapes');
             const shapes = ['●', '■', '▲', '◆'];
             const colors = ['#ffc107', '#ff9800', '#ff6b6b', '#4ecdc4'];
-            
+
             for (let i = 0; i < 30; i++) {
                 const shape = document.createElement('div');
                 shape.className = 'shape';
@@ -568,7 +833,37 @@
                 shapesContainer.appendChild(shape);
             }
         }
-        
+
+        // التنقل بين الأقسام
+        function scrollSections(direction) {
+            const container = document.getElementById('sectionsContainer');
+            const scrollAmount = 470; // card width + gap
+
+            if (direction === 'next') {
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            }
+        }
+
+        // دعم السحب على الشاشات اللمسية
+        function initTouchScroll() {
+            const container = document.getElementById('sectionsContainer');
+            let startX = 0;
+            let scrollLeft = 0;
+
+            container.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].pageX - container.offsetLeft;
+                scrollLeft = container.scrollLeft;
+            });
+
+            container.addEventListener('touchmove', (e) => {
+                const x = e.touches[0].pageX - container.offsetLeft;
+                const walk = (x - startX) * 2;
+                container.scrollLeft = scrollLeft - walk;
+            });
+        }
+
         // التنقل إلى القسم المختار
         function navigateToSection(section) {
             const card = event.currentTarget;
@@ -577,34 +872,7 @@
                 window.location.href = '/' + section;
             }, 300);
         }
-        
-        // Scroll Indicator functionality
-        function initScrollIndicator() {
-            const container = document.getElementById('sectionsContainer');
-            const dots = document.querySelectorAll('.scroll-dot');
-            
-            container.addEventListener('scroll', () => {
-                const scrollLeft = container.scrollLeft;
-                const cardWidth = 350 + 32; // card width + gap
-                const currentIndex = Math.round(scrollLeft / cardWidth);
-                
-                dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentIndex);
-                });
-            });
-            
-            dots.forEach(dot => {
-                dot.addEventListener('click', () => {
-                    const index = parseInt(dot.dataset.index);
-                    const cardWidth = 350 + 32;
-                    container.scrollTo({
-                        left: index * cardWidth,
-                        behavior: 'smooth'
-                    });
-                });
-            });
-        }
-        
+
         // تأثيرات إضافية عند تحريك الماوس
         document.addEventListener('mousemove', function(e) {
             const cards = document.querySelectorAll('.section-card');
@@ -612,17 +880,46 @@
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-                
+
                 card.style.setProperty('--mouse-x', x + 'px');
                 card.style.setProperty('--mouse-y', y + 'px');
             });
         });
         
+        // Hero Section Animation Sequence
+        function initHeroAnimation() {
+            const heroInitial = document.getElementById('heroInitial');
+            const heroFull = document.getElementById('heroFull');
+            const visionItem = document.getElementById('visionItem');
+            const missionItem = document.getElementById('missionItem');
+            const valuesItem = document.getElementById('valuesItem');
+            
+            // Wait 2 seconds, then transition to full view
+            setTimeout(() => {
+                heroInitial.style.display = 'none';
+                heroFull.classList.add('active');
+                
+                // Show info items one by one with delay
+                setTimeout(() => {
+                    visionItem.classList.add('show');
+                }, 500);
+                
+                setTimeout(() => {
+                    missionItem.classList.add('show');
+                }, 1000);
+                
+                setTimeout(() => {
+                    valuesItem.classList.add('show');
+                }, 1500);
+            }, 2000);
+        }
+        
         // تهيئة الصفحة
         document.addEventListener('DOMContentLoaded', function() {
             createFloatingShapes();
             initBackgroundSlider();
-            initScrollIndicator();
+            initTouchScroll();
+            initHeroAnimation();
         });
     </script>
     
