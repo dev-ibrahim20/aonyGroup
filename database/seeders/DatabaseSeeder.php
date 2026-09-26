@@ -12,18 +12,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create admin user if not exists
-        \App\Models\User::firstOrCreate(
-            ['email' => 'admin@admin.com'],
-            [
-                'name' => 'Admin',
-                'password' => \Illuminate\Support\Facades\Hash::make('admin1234'),
-                'email_verified_at' => now(),
-            ]
-        );
-
         // Seed data
         $this->call([
+            AdminUserSeeder::class,
             ProjectSeeder::class,
             UnitSeeder::class,
             BlogSeeder::class,

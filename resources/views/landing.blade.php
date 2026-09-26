@@ -22,13 +22,13 @@
         * {
             font-family: 'Dubai', sans-serif;
         }
-        
+
         body {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
             min-height: 100vh;
             overflow-x: hidden;
         }
-        
+
         /* Hero Section with Background Slider */
         .hero-section {
             height: 100vh;
@@ -39,7 +39,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .background-slider {
             position: absolute;
             top: 0;
@@ -48,7 +48,7 @@
             height: 100%;
             z-index: 0;
         }
-        
+
         .slide {
             position: absolute;
             top: 0;
@@ -61,11 +61,11 @@
             transition: opacity 1.5s ease-in-out;
             filter: brightness(1.1) contrast(1.05) saturate(1.1);
         }
-        
+
         .slide.active {
             opacity: 1;
         }
-        
+
         .hero-overlay {
             position: absolute;
             top: 0;
@@ -75,7 +75,7 @@
             background: transparent;
             z-index: 1;
         }
-        
+
         .hero-content {
             position: relative;
             z-index: 10;
@@ -87,14 +87,14 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .hero-initial {
             display: flex;
             flex-direction: column;
             align-items: center;
             animation: fadeInCenter 1s ease-out;
         }
-        
+
         @keyframes fadeInCenter {
             from {
                 opacity: 0;
@@ -105,7 +105,7 @@
                 transform: scale(1);
             }
         }
-        
+
         .hero-full {
             display: none;
             width: 100%;
@@ -113,12 +113,12 @@
             gap: 3rem;
             align-items: center;
         }
-        
+
         .hero-full.active {
             display: grid;
             animation: fadeInContent 1s ease-out;
         }
-        
+
         @keyframes fadeInContent {
             from {
                 opacity: 0;
@@ -127,14 +127,14 @@
                 opacity: 1;
             }
         }
-        
+
         .hero-brand {
             display: flex;
             flex-direction: column;
             align-items: center;
             animation: slideToRight 1s ease-out;
         }
-        
+
         @keyframes slideToRight {
             from {
                 opacity: 0;
@@ -145,11 +145,11 @@
                 transform: translateX(0);
             }
         }
-        
+
         .hero-info {
             animation: slideToLeft 1s ease-out;
         }
-        
+
         @keyframes slideToLeft {
             from {
                 opacity: 0;
@@ -160,7 +160,7 @@
                 transform: translateX(0);
             }
         }
-        
+
         .info-item {
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
@@ -171,18 +171,18 @@
             opacity: 0;
             transform: translateY(20px);
         }
-        
+
         .info-item.show {
             animation: fadeInItem 0.5s ease-out forwards;
         }
-        
+
         @keyframes fadeInItem {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         .info-item h3 {
             color: #ffc107;
             font-size: 1.2rem;
@@ -195,7 +195,7 @@
             font-size: 1rem;
             line-height: 1.6;
         }
-        
+
         .logo-container {
             width: 180px;
             height: 180px;
@@ -209,7 +209,7 @@
             box-shadow: 0 20px 50px rgba(255, 193, 7, 0.4);
             animation: pulseLogo 2s infinite;
         }
-        
+
         @keyframes pulseLogo {
             0%, 100% {
                 transform: scale(1);
@@ -220,7 +220,7 @@
                 box-shadow: 0 25px 60px rgba(255, 193, 7, 0.6);
             }
         }
-        
+
         .main-title {
             font-size: 4.5rem;
             font-weight: 900;
@@ -228,19 +228,19 @@
             margin-bottom: 1rem;
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
         }
-        
+
         .main-title span {
             background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         .hero-brand .main-title {
             font-size: 3rem;
             margin-top: 1rem;
         }
-        
+
         /* Sections Section with Horizontal Animation */
         .sections-section {
             padding: 6rem 2rem;
@@ -462,7 +462,7 @@
             position: relative;
             z-index: 2;
         }
-        
+
         .floating-shapes {
             position: fixed;
             top: 0;
@@ -473,13 +473,13 @@
             overflow: hidden;
             z-index: 1;
         }
-        
+
         .shape {
             position: absolute;
             opacity: 0.1;
             animation: floatShape 20s infinite;
         }
-        
+
         @keyframes floatShape {
             0%, 100% {
                 transform: translateY(100vh) rotate(0deg) scale(1);
@@ -488,7 +488,7 @@
                 transform: translateY(-100vh) rotate(360deg) scale(1.5);
             }
         }
-        
+
         .shine-effect {
             position: absolute;
             top: 0;
@@ -498,13 +498,13 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
             transition: left 0.5s ease;
         }
-        
+
         .section-card:hover .shine-effect {
             left: 100%;
         }
-        
 
-        
+
+
         .pulse-ring {
             position: absolute;
             width: 100%;
@@ -524,7 +524,7 @@
                 opacity: 0;
             }
         }
-        
+
         /* Responsive Design */
         @media (max-width: 1200px) {
             .main-title {
@@ -674,7 +674,7 @@
 </head>
 <body>
     <div class="floating-shapes" id="shapes"></div>
-    
+
     <!-- Hero Section with Background Slider -->
     <div class="hero-section">
         <div class="background-slider" id="backgroundSlider">
@@ -684,9 +684,9 @@
             <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=90');"></div>
             <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=90');"></div>
         </div>
-        
+
         <div class="hero-overlay"></div>
-        
+
         <div class="hero-content">
             <!-- Initial View: Logo and Company Name -->
             <div class="hero-initial" id="heroInitial">
@@ -696,7 +696,7 @@
                 </div>
                 <h1 class="main-title">شركة <span>العوني</span> العقارية</h1>
             </div>
-            
+
             <!-- Full View: Brand on one side, Info on the other -->
             <div class="hero-full" id="heroFull">
                 <div class="hero-brand">
@@ -706,18 +706,18 @@
                     </div>
                     <h1 class="main-title">شركة <span>العوني</span> العقارية</h1>
                 </div>
-                
-                <div class="hero-info">
+
+                <div class="hero-info" id="about">
                     <div class="info-item" id="visionItem">
                         <h3>🎯 رؤيتنا</h3>
                         <p>أن نكون الخيار الأول والمفضل في السوق العقاري من خلال تقديم خدمات استثنائية تتجاوز توقعات عملائنا.</p>
                     </div>
-                    
+
                     <div class="info-item" id="missionItem">
                         <h3>🚀 رسالتنا</h3>
                         <p>نقدم حلولاً عقارية شاملة ومبتكرة تضمن لعملائنا أعلى عوائد الاستثمار مع الحفاظ على أعلى معايير الجودة.</p>
                     </div>
-                    
+
                     <div class="info-item" id="valuesItem">
                         <h3>💎 قيمنا</h3>
                         <p>النزاهة، الاحترافية، الابتكار، والالتزام بخدمة عملائنا بأعلى معايير الجودة والأمانة.</p>
@@ -726,7 +726,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Sections Section with Horizontal Animation -->
     <div class="sections-section">
         <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">اختر القسم الذي تريد استكشافه</h2>
@@ -800,7 +800,7 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         // Background Slider
         function initBackgroundSlider() {
@@ -885,7 +885,7 @@
                 card.style.setProperty('--mouse-y', y + 'px');
             });
         });
-        
+
         // Hero Section Animation Sequence
         function initHeroAnimation() {
             const heroInitial = document.getElementById('heroInitial');
@@ -893,27 +893,27 @@
             const visionItem = document.getElementById('visionItem');
             const missionItem = document.getElementById('missionItem');
             const valuesItem = document.getElementById('valuesItem');
-            
+
             // Wait 2 seconds, then transition to full view
             setTimeout(() => {
                 heroInitial.style.display = 'none';
                 heroFull.classList.add('active');
-                
+
                 // Show info items one by one with delay
                 setTimeout(() => {
                     visionItem.classList.add('show');
                 }, 500);
-                
+
                 setTimeout(() => {
                     missionItem.classList.add('show');
                 }, 1000);
-                
+
                 setTimeout(() => {
                     valuesItem.classList.add('show');
                 }, 1500);
             }, 2000);
         }
-        
+
         // تهيئة الصفحة
         document.addEventListener('DOMContentLoaded', function() {
             createFloatingShapes();
@@ -922,7 +922,7 @@
             initHeroAnimation();
         });
     </script>
-    
-    @include('footer')
+
+    @include('partials.footer')
 </body>
 </html>

@@ -7,7 +7,6 @@ use App\Models\Project;
 use App\Models\Unit;
 use App\Models\Lead;
 use App\Models\Blog;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -26,6 +25,7 @@ class DashboardController extends Controller
             'featured_projects' => Project::where('featured', true)->count(),
             'available_units' => Unit::where('status', 'available')->count(),
             'new_leads' => Lead::where('created_at', '>=', now()->subDays(7))->count(),
+            'published_posts' => Blog::published()->count(),
         ];
 
         // Get recent data
@@ -34,7 +34,7 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        $recentLeads = Lead::latest()
+        $recentLeads = Lead::with('project')->latest()
             ->take(5)
             ->get();
 
@@ -67,11 +67,11 @@ class DashboardController extends Controller
         for ($i = 5; $i >= 0; $i--) {
             $month = now()->subMonths($i);
             $months[] = $month->format('M Y');
-            
+
             $projectsData[] = Project::whereMonth('created_at', $month->month)
                 ->whereYear('created_at', $month->year)
                 ->count();
-                
+
             $leadsData[] = Lead::whereMonth('created_at', $month->month)
                 ->whereYear('created_at', $month->year)
                 ->count();

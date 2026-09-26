@@ -150,11 +150,11 @@
                 font-size: 1.5rem;
             }
         }
-        @include('sections.partials.service-page-design-styles')
+            @include('sections.partials.service-page-design-styles');
     </style>
 </head>
 <body>
-    <a href="/" class="back-button"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" style="display:inline-block;vertical-align:middle;margin-left:.4rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="m15 18-6-6 6-6"></path><path d="M9 12h12"></path></svg>العودة للرئيسية</a>
+    @include('partials.navbar')
 
     <div class="hero-section">
         <div class="background-slider" aria-hidden="true">
@@ -262,7 +262,7 @@
         </div>
     </div>
 
-    @include('footer')
+    @include('partials.footer')
     @include('sections.partials.service-page-design-script')
 </body>
 </html>

@@ -297,6 +297,7 @@
         }
 
         .process-line {
+            display: none;
             position: absolute;
             top: 0;
             bottom: 0;
@@ -799,7 +800,7 @@
     </style>
 </head>
 <body>
-    <a href="/" class="back-button">← العودة للرئيسية</a>
+    @include('partials.navbar')
 
     <div class="hero-section">
         <div class="background-slider" id="backgroundSlider">
@@ -1098,7 +1099,7 @@
         </div>
     </div>
 
-    @include('footer')
+    @include('partials.footer')
 
     <script>
         function initBackgroundSlider() {

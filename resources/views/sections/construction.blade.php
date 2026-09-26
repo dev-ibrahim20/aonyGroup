@@ -22,7 +22,7 @@
         * {
             font-family: 'Dubai', sans-serif;
         }
-        
+
         body {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
             min-height: 100vh;
@@ -259,11 +259,11 @@
                 opacity: 0;
             }
         }
-        
+
         .content-section {
             padding: 4rem 2rem;
         }
-        
+
         .feature-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
@@ -273,13 +273,13 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
-        
+
         .feature-card:hover {
             transform: translateY(-10px) scale(1.03);
             box-shadow: 0 20px 50px rgba(255, 193, 7, 0.25);
             border-color: rgba(255, 193, 7, 0.4);
         }
-        
+
         .back-button {
             position: fixed;
             top: 2rem;
@@ -294,12 +294,12 @@
             z-index: 1000;
             box-shadow: 0 10px 25px rgba(255, 193, 7, 0.4);
         }
-        
+
         .back-button:hover {
             transform: scale(1.1);
             box-shadow: 0 15px 35px rgba(255, 193, 7, 0.5);
         }
-        
+
         .icon-wrapper {
             width: 70px;
             height: 70px;
@@ -355,6 +355,7 @@
         }
 
         .process-line {
+            display: none;
             position: absolute;
             top: 0;
             bottom: 0;
@@ -655,7 +656,7 @@
             font-size: 1.2rem;
             margin-top: 0.5rem;
         }
-        
+
         /* Responsive Design */
         @media (max-width: 1200px) {
             .main-title {
@@ -910,7 +911,7 @@
     </style>
 </head>
 <body>
-    <a href="/" class="back-button">← العودة للرئيسية</a>
+    @include('partials.navbar')
 
     <!-- Hero Section with Background Slider -->
     <div class="hero-section">
@@ -963,48 +964,48 @@
             </div>
         </div>
     </div>
-    
+
     <div class="content-section max-w-6xl mx-auto">
         <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">خدماتنا في المقاولات</h2>
-        
+
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="feature-card">
                 <div class="icon-wrapper">🏗️</div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">البناء العام</h3>
                 <p class="text-gray-600">تنفيذ جميع أعمال البناء من الأساسات حتى التشطيبات</p>
             </div>
-            
+
             <div class="feature-card">
                 <div class="icon-wrapper">🏢</div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">المباني التجارية</h3>
                 <p class="text-gray-600">بناء المباني التجارية والمكاتب بمعايير احترافية</p>
             </div>
-            
+
             <div class="feature-card">
                 <div class="icon-wrapper">🏠</div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">البناء السكني</h3>
                 <p class="text-gray-600">تنفيذ المشاريع السكنية الفاخرة والفيلا</p>
             </div>
-            
+
             <div class="feature-card">
                 <div class="icon-wrapper">🛠️</div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">الترميم والصيانة</h3>
                 <p class="text-gray-600">أعمال الترميم والصيانة للمباني القائمة</p>
             </div>
-            
+
             <div class="feature-card">
                 <div class="icon-wrapper">🚧</div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">الأعمال التأسيسية</h3>
                 <p class="text-gray-600">تنفيذ الأعمال التأسيسية والبنية التحتية</p>
             </div>
-            
+
             <div class="feature-card">
                 <div class="icon-wrapper">✅</div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">مراقبة الجودة</h3>
                 <p class="text-gray-600">نظام متكامل لمراقبة الجودة في جميع مراحل التنفيذ</p>
             </div>
         </div>
-        
+
         <div class="mt-12 text-center">
             <p class="text-gray-500 mb-4">هل لديك مشروع بناء؟</p>
             <button class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-8 py-3 rounded-full font-bold hover:opacity-90 transition-opacity shadow-lg">
@@ -1221,7 +1222,7 @@
         </div>
     </div>
 
-    @include('footer')
+    @include('partials.footer')
 
     <script>
         // Background Slider

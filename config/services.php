@@ -31,4 +31,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'social' => [
+        'facebook' => env('SOCIAL_FACEBOOK_URL', 'https://www.facebook.com/'),
+        'whatsapp' => env('SOCIAL_WHATSAPP_URL', 'https://wa.me/?text=' . urlencode('مرحبًا، أود التواصل مع شركة العوني العقارية')),
+        'instagram' => env('SOCIAL_INSTAGRAM_URL', 'https://www.instagram.com/'),
+        'x' => env('SOCIAL_X_URL', 'https://x.com/'),
+        'tiktok' => env('SOCIAL_TIKTOK_URL', 'https://www.tiktok.com/'),
+    ],
+
 ];
