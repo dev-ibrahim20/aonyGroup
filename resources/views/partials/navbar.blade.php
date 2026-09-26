@@ -1,3 +1,4 @@
+@php($homepageSettings = \App\Models\SiteSetting::homepage())
 <style>
     .aony-navbar {
         --nav-ink: #172033;
@@ -73,9 +74,9 @@
 
 <header class="aony-navbar" id="aonyNavbar">
     <div class="aony-nav-inner">
-        <a class="aony-brand" href="{{ url('/') }}" aria-label="شركة العوني العقارية - الرئيسية">
-            <span class="aony-brand-mark" aria-hidden="true"><img src="{{ asset('favicon.ico') }}" alt=""></span>
-            <span class="aony-brand-copy"><strong>العوني العقارية</strong><small>حلول عقارية متكاملة</small></span>
+        <a class="aony-brand" href="{{ url('/') }}" aria-label="{{ $homepageSettings['company_name'] }} - الرئيسية">
+            <span class="aony-brand-mark" aria-hidden="true"><img src="{{ $homepageSettings['logo'] ?: asset('favicon.ico') }}" alt=""></span>
+            <span class="aony-brand-copy"><strong>{{ $homepageSettings['company_name'] }}</strong><small>حلول عقارية متكاملة</small></span>
         </a>
 
         <button class="aony-menu-toggle" type="button" aria-label="فتح القائمة" aria-expanded="false" aria-controls="aonyNavContent">

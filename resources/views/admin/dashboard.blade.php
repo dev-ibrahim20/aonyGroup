@@ -116,6 +116,7 @@
             <p class="sidebar-label">القائمة الرئيسية</p>
             <nav class="sidebar-nav" aria-label="القائمة الرئيسية">
                 <a class="sidebar-link active" href="#overview"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="5" rx="2"></rect><rect x="13" y="10" width="8" height="11" rx="2"></rect><rect x="3" y="13" width="8" height="8" rx="2"></rect></svg>نظرة عامة</a>
+                <a class="sidebar-link" href="{{ route('admin.homepage.edit') }}"><svg viewBox="0 0 24 24"><path d="M3 5h18v14H3zM3 9h18M8 5v14"></path></svg>الصفحة الرئيسية</a>
                 <a class="sidebar-link" href="#projects"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l8-4v18M13 10h6v11"></path></svg>المشاريع</a>
                 <a class="sidebar-link" href="#units"><svg viewBox="0 0 24 24"><path d="M3 10 12 3l9 7v11H3z"></path><path d="M9 21v-7h6v7"></path></svg>الوحدات</a>
                 <a class="sidebar-link" href="#leads"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"></circle><path d="M3 21v-2a6 6 0 0 1 12 0v2M17 11a4 4 0 1 0 0-8M21 21v-2a6 6 0 0 0-4-5.65"></path></svg>العملاء المحتملون</a>

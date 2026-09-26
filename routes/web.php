@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\HomepageSettingsController;
+use App\Models\SiteSetting;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +18,7 @@ use App\Http\Controllers\Admin\DashboardController;
 
 // الصفحة الرئيسية - شاشة اختيار الأقسام
 Route::get('/', function () {
-    return view('landing');
+    return view('landing', ['homepage' => SiteSetting::homepage()]);
 })->name('landing');
 
 // أقسام العوني العقارية
@@ -63,4 +65,6 @@ require __DIR__ . '/auth.php';
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/homepage', [HomepageSettingsController::class, 'edit'])->name('homepage.edit');
+    Route::put('/homepage', [HomepageSettingsController::class, 'update'])->name('homepage.update');
 });

@@ -208,6 +208,16 @@
             font-size: 4.5rem;
             box-shadow: 0 20px 50px rgba(255, 193, 7, 0.4);
             animation: pulseLogo 2s infinite;
+            position: relative;
+        }
+
+        .logo-container img {
+            position: relative;
+            z-index: 2;
+            width: 72%;
+            height: 72%;
+            object-fit: contain;
+            border-radius: 50%;
         }
 
         @keyframes pulseLogo {
@@ -678,11 +688,9 @@
     <!-- Hero Section with Background Slider -->
     <div class="hero-section">
         <div class="background-slider" id="backgroundSlider">
-            <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=90');"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=90');"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=90');"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=90');"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=90');"></div>
+            @foreach ($homepage['hero_images'] as $index => $image)
+                <div class="slide {{ $index === 0 ? 'active' : '' }}" style="background-image: url('{{ $image }}');"></div>
+            @endforeach
         </div>
 
         <div class="hero-overlay"></div>
@@ -692,9 +700,9 @@
             <div class="hero-initial" id="heroInitial">
                 <div class="logo-container">
                     <div class="pulse-ring"></div>
-                    🏢
+                    @if ($homepage['logo'])<img src="{{ $homepage['logo'] }}" alt="شعار {{ $homepage['company_name'] }}">@else<svg aria-hidden="true" viewBox="0 0 48 48" width="78" height="78" fill="none" stroke="#253247" stroke-width="2.2" stroke-linejoin="round"><path d="M5 41V18L24 6l19 12v23H5Z"/><path d="M16 41V26h16v15M14 19h3m14 0h3m-20 7h3m14 0h3" stroke-linecap="round"/></svg>@endif
                 </div>
-                <h1 class="main-title">شركة <span>العوني</span> العقارية</h1>
+                <h1 class="main-title">{{ $homepage['company_name'] }}</h1>
             </div>
 
             <!-- Full View: Brand on one side, Info on the other -->
@@ -702,25 +710,25 @@
                 <div class="hero-brand">
                     <div class="logo-container">
                         <div class="pulse-ring"></div>
-                        🏢
+                        @if ($homepage['logo'])<img src="{{ $homepage['logo'] }}" alt="شعار {{ $homepage['company_name'] }}">@else<svg aria-hidden="true" viewBox="0 0 48 48" width="78" height="78" fill="none" stroke="#253247" stroke-width="2.2" stroke-linejoin="round"><path d="M5 41V18L24 6l19 12v23H5Z"/><path d="M16 41V26h16v15M14 19h3m14 0h3m-20 7h3m14 0h3" stroke-linecap="round"/></svg>@endif
                     </div>
-                    <h1 class="main-title">شركة <span>العوني</span> العقارية</h1>
+                    <h1 class="main-title">{{ $homepage['company_name'] }}</h1>
                 </div>
 
                 <div class="hero-info" id="about">
                     <div class="info-item" id="visionItem">
-                        <h3>🎯 رؤيتنا</h3>
-                        <p>أن نكون الخيار الأول والمفضل في السوق العقاري من خلال تقديم خدمات استثنائية تتجاوز توقعات عملائنا.</p>
+                        <h3>رؤيتنا</h3>
+                        <p>{{ $homepage['vision'] }}</p>
                     </div>
 
                     <div class="info-item" id="missionItem">
-                        <h3>🚀 رسالتنا</h3>
-                        <p>نقدم حلولاً عقارية شاملة ومبتكرة تضمن لعملائنا أعلى عوائد الاستثمار مع الحفاظ على أعلى معايير الجودة.</p>
+                        <h3>رسالتنا</h3>
+                        <p>{{ $homepage['mission'] }}</p>
                     </div>
 
                     <div class="info-item" id="valuesItem">
-                        <h3>💎 قيمنا</h3>
-                        <p>النزاهة، الاحترافية، الابتكار، والالتزام بخدمة عملائنا بأعلى معايير الجودة والأمانة.</p>
+                        <h3>قيمنا</h3>
+                        <p>{{ $homepage['values'] }}</p>
                     </div>
                 </div>
             </div>
@@ -738,65 +746,16 @@
             </div>
 
             <div class="sections-container" id="sectionsContainer">
-                <div class="section-card" onclick="navigateToSection('real-estate-investment')">
-                    <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="الاستثمار العقاري" class="card-image">
-                    <div class="card-content">
-                        <div class="icon-container">
-                            <div class="pulse-ring"></div>
-                            🏢
+                @foreach ($homepage['sections'] as $section)
+                    <div class="section-card" onclick="navigateToSection('{{ $section['route'] }}')" role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();navigateToSection('{{ $section['route'] }}')}">
+                        <img src="{{ $section['image'] }}" alt="{{ $section['name'] }}" class="card-image" loading="lazy">
+                        <div class="card-content">
+                            <div class="icon-container"><div class="pulse-ring"></div>{{ $section['icon'] }}</div>
+                            <h3 class="section-title">{{ $section['name'] }}</h3>
+                            <p class="section-description">{{ $section['description'] }}</p>
                         </div>
-                        <h3 class="section-title">الاستثمار العقاري</h3>
-                        <p class="section-description">فرص استثمارية استراتيجية في العقارات بأعلى عوائد</p>
                     </div>
-                </div>
-
-                <div class="section-card" onclick="navigateToSection('real-estate-development')">
-                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="التطوير العقاري" class="card-image">
-                    <div class="card-content">
-                        <div class="icon-container">
-                            <div class="pulse-ring"></div>
-                            🏗️
-                        </div>
-                        <h3 class="section-title">التطوير العقاري</h3>
-                        <p class="section-description">تطوير مشاريع عقارية مبتكرة بمعايير عالمية</p>
-                    </div>
-                </div>
-
-                <div class="section-card" onclick="navigateToSection('construction')">
-                    <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="المقاولات" class="card-image">
-                    <div class="card-content">
-                        <div class="icon-container">
-                            <div class="pulse-ring"></div>
-                            🔨
-                        </div>
-                        <h3 class="section-title">المقاولات</h3>
-                        <p class="section-description">تنفيذ مشاريع البناء بأعلى جودة وكفاءة</p>
-                    </div>
-                </div>
-
-                <div class="section-card" onclick="navigateToSection('real-estate-marketing')">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="التسويق العقاري" class="card-image">
-                    <div class="card-content">
-                        <div class="icon-container">
-                            <div class="pulse-ring"></div>
-                            📊
-                        </div>
-                        <h3 class="section-title">التسويق العقاري</h3>
-                        <p class="section-description">استراتيجيات تسويقية ذكية لبيع وتأجير العقارات</p>
-                    </div>
-                </div>
-
-                <div class="section-card" onclick="navigateToSection('engineering-consultancy')">
-                    <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="مكتب الاستشارات الهندسية" class="card-image">
-                    <div class="card-content">
-                        <div class="icon-container">
-                            <div class="pulse-ring"></div>
-                            📐
-                        </div>
-                        <h3 class="section-title">مكتب الاستشارات الهندسية</h3>
-                        <p class="section-description">استشارات هندسية متخصصة ودراسات فنية دقيقة</p>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>

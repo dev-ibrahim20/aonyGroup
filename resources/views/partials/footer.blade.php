@@ -1,13 +1,14 @@
+@php($homepageSettings = \App\Models\SiteSetting::homepage())
 <footer id="contact" class="bg-gray-900 text-white py-12" style="font-family: 'Dubai', sans-serif;">
     <div class="max-w-6xl mx-auto px-4">
         <div class="grid md:grid-cols-4 gap-8">
             <!-- معلومات الشركة -->
             <div class="md:col-span-2">
                 <div class="flex items-center mb-4">
-                    <a href="{{ url('/') }}" class="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-2xl mr-3 hover:scale-110 transition-transform">
-                        🏢
+                    <a href="{{ url('/') }}" class="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-2xl mr-3 hover:scale-110 transition-transform overflow-hidden">
+                        @if ($homepageSettings['logo'])<img src="{{ $homepageSettings['logo'] }}" alt="شعار {{ $homepageSettings['company_name'] }}" class="w-full h-full object-contain p-1">@else<span aria-hidden="true">🏢</span>@endif
                     </a>
-                    <a href="{{ url('/') }}" class="text-2xl font-bold hover:text-yellow-400 transition-colors">شركة العوني العقارية</a>
+                    <a href="{{ url('/') }}" class="text-2xl font-bold hover:text-yellow-400 transition-colors">{{ $homepageSettings['company_name'] }}</a>
                 </div>
                 <p class="text-gray-400 mb-4 leading-relaxed">
                     شريكك الموثوق في عالم العقارات. نقدم خدمات شاملة في الاستثمار والتطوير والمقاولات والتسويق والاستشارات الهندسية بأعلى معايير الجودة.
@@ -46,23 +47,23 @@
                 <ul class="space-y-3">
                     <li class="flex items-start">
                         <span class="text-yellow-400 ml-2">📍</span>
-                        <span class="text-gray-400">القاهرة، مصر - التجمع الخامس</span>
+                        <span class="text-gray-400">{{ $homepageSettings['contact']['address'] }}</span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-yellow-400 ml-2">📞</span>
-                        <span class="text-gray-400">+20 2 1234 5678</span>
+                        <span class="text-gray-400">{{ $homepageSettings['contact']['phone'] }}</span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-yellow-400 ml-2">📱</span>
-                        <span class="text-gray-400">+20 10 1234 5678</span>
+                        <span class="text-gray-400">{{ $homepageSettings['contact']['mobile'] }}</span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-yellow-400 ml-2">📧</span>
-                        <span class="text-gray-400">info@aonygroup.com</span>
+                        <span class="text-gray-400">{{ $homepageSettings['contact']['email'] }}</span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-yellow-400 ml-2">🕐</span>
-                        <span class="text-gray-400">الأحد - الخميس: 9 ص - 6 م</span>
+                        <span class="text-gray-400">{{ $homepageSettings['contact']['hours'] }}</span>
                     </li>
                 </ul>
             </div>
@@ -70,7 +71,7 @@
 
         <div class="border-t border-gray-800 mt-8 pt-8 text-center">
             <p class="text-gray-400">
-                © {{ date('Y') }} شركة العوني العقارية. جميع الحقوق محفوظة.
+                © {{ date('Y') }} {{ $homepageSettings['company_name'] }}. جميع الحقوق محفوظة.
             </p>
         </div>
     </div>
