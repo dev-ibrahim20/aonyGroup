@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomepageSettingsController;
 use App\Http\Controllers\Admin\InvestmentPageController;
 use App\Http\Controllers\Admin\ServicePageController;
+use App\Http\Controllers\Admin\SocialLinksController;
 use App\Models\SiteSetting;
 use App\Models\InvestmentPageSetting;
 use App\Models\ServicePageSetting;
@@ -77,4 +78,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/investment', [InvestmentPageController::class, 'update'])->name('investment.update');
     Route::get('/sections/{section}', [ServicePageController::class, 'edit'])->name('service-pages.edit');
     Route::put('/sections/{section}', [ServicePageController::class, 'update'])->name('service-pages.update');
+    Route::get('/social-links', [SocialLinksController::class, 'edit'])->name('social-links.edit');
+    Route::put('/social-links', [SocialLinksController::class, 'update'])->name('social-links.update');
 });

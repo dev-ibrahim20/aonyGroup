@@ -66,6 +66,23 @@ class SiteSetting extends Model
         );
     }
 
+    public static function socialLinks(): array
+    {
+        $defaults = config('services.social', []);
+        $stored = self::query()->where('key', 'social_links')->value('value');
+        $links = is_string($stored) ? json_decode($stored, true) : null;
+
+        return is_array($links) ? array_replace($defaults, $links) : $defaults;
+    }
+
+    public static function saveSocialLinks(array $links): void
+    {
+        self::updateOrCreate(
+            ['key' => 'social_links'],
+            ['value' => json_encode($links, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)]
+        );
+    }
+
     private static function resolveImagePaths(array $content): array
     {
         $resolve = static function (?string $image): string {

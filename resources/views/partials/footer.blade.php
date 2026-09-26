@@ -1,4 +1,5 @@
 @php($homepageSettings = \App\Models\SiteSetting::homepage())
+@php($socialLinks = \App\Models\SiteSetting::socialLinks())
 <footer id="contact" class="bg-gray-900 text-white py-12" style="font-family: 'Dubai', sans-serif;">
     <div class="max-w-6xl mx-auto px-4">
         <div class="grid md:grid-cols-4 gap-8">
@@ -146,19 +147,29 @@
 </style>
 
 <nav class="aony-social-rail" aria-label="تابعنا على مواقع التواصل الاجتماعي">
-    <a class="aony-social-link aony-social-facebook" href="{{ config('services.social.facebook', 'https://www.facebook.com/') }}" target="_blank" rel="noopener noreferrer" aria-label="فيسبوك" title="فيسبوك">
+    @if ($socialLinks['facebook'] ?? false)
+    <a class="aony-social-link aony-social-facebook" href="{{ $socialLinks['facebook'] }}" target="_blank" rel="noopener noreferrer" aria-label="فيسبوك" title="فيسبوك">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.4 21v-8.2h2.8l.4-3.2h-3.2v-2c0-.9.3-1.5 1.6-1.5h1.7V3.2c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.2H7.2v3.2H10V21h3.4Z"/></svg>
     </a>
-    <a class="aony-social-link aony-social-whatsapp" href="{{ config('services.social.whatsapp', 'https://wa.me/?text=' . urlencode('مرحبًا، أود التواصل مع شركة العوني العقارية')) }}" target="_blank" rel="noopener noreferrer" aria-label="واتساب" title="واتساب">
+    @endif
+    @if ($socialLinks['whatsapp'] ?? false)
+    <a class="aony-social-link aony-social-whatsapp" href="{{ $socialLinks['whatsapp'] }}" target="_blank" rel="noopener noreferrer" aria-label="واتساب" title="واتساب">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2A9.94 9.94 0 0 0 3.5 17.05L2 22l5.08-1.46A9.99 9.99 0 1 0 12.04 2Zm0 18.18c-1.45 0-2.87-.39-4.11-1.13l-.3-.18-3.02.87.88-2.94-.2-.31A8.14 8.14 0 1 1 12.04 20.18Zm4.47-6.1c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.4-.54-.4h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.58.18 1.1.16 1.51.1.46-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z"/></svg>
     </a>
-    <a class="aony-social-link aony-social-instagram" href="{{ config('services.social.instagram', 'https://www.instagram.com/') }}" target="_blank" rel="noopener noreferrer" aria-label="إنستغرام" title="إنستغرام">
+    @endif
+    @if ($socialLinks['instagram'] ?? false)
+    <a class="aony-social-link aony-social-instagram" href="{{ $socialLinks['instagram'] }}" target="_blank" rel="noopener noreferrer" aria-label="إنستغرام" title="إنستغرام">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Z"/><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm5.25-3.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/></svg>
     </a>
-    <a class="aony-social-link aony-social-x" href="{{ config('services.social.x', 'https://x.com/') }}" target="_blank" rel="noopener noreferrer" aria-label="منصة X" title="منصة X">
+    @endif
+    @if ($socialLinks['x'] ?? false)
+    <a class="aony-social-link aony-social-x" href="{{ $socialLinks['x'] }}" target="_blank" rel="noopener noreferrer" aria-label="منصة X" title="منصة X">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 2H22l-6.78 7.75L23.2 22h-6.25l-4.9-7.4L5.57 22H2.44l7.25-8.29L1.8 2h6.4l4.43 6.77L18.9 2Zm-1.1 18h1.73L7.28 3.89H5.42L17.8 20Z"/></svg>
     </a>
-    <a class="aony-social-link aony-social-tiktok" href="{{ config('services.social.tiktok', 'https://www.tiktok.com/') }}" target="_blank" rel="noopener noreferrer" aria-label="تيك توك" title="تيك توك">
+    @endif
+    @if ($socialLinks['tiktok'] ?? false)
+    <a class="aony-social-link aony-social-tiktok" href="{{ $socialLinks['tiktok'] }}" target="_blank" rel="noopener noreferrer" aria-label="تيك توك" title="تيك توك">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.6 6.3a5.7 5.7 0 0 1-3.5-1.2V15a6.2 6.2 0 1 1-5.4-6.15v3.2a3.1 3.1 0 1 0 2.2 2.97V2h3.2a5.7 5.7 0 0 0 3.5 3.2v1.1Z"/></svg>
     </a>
+    @endif
 </nav>

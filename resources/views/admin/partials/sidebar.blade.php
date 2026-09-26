@@ -7,7 +7,11 @@
     .admin-brand strong { display: block; color: #fff; font-size: .96rem; }
     .admin-brand small { display: block; margin-top: 2px; color: #98a2b3; font-size: .75rem; }
     .sidebar-label { margin: 26px 12px 10px; color: #98a2b3; font-size: .74rem; font-weight: 700; }
-    .sidebar-nav { display: grid; gap: 5px; }
+    .sidebar-nav { display: grid; flex: 1 1 auto; min-height: 0; align-content: start; gap: 5px; overflow-y: auto; overscroll-behavior: contain; padding: 2px 3px 10px 0; scrollbar-width: thin; scrollbar-color: rgba(242,185,22,.55) transparent; }
+    .sidebar-nav::-webkit-scrollbar { width: 6px; }
+    .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+    .sidebar-nav::-webkit-scrollbar-thumb { border-radius: 10px; background: rgba(242,185,22,.45); }
+    .sidebar-nav::-webkit-scrollbar-thumb:hover { background: rgba(242,185,22,.8); }
     .sidebar-link { display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 12px; border-radius: 12px; color: #cbd2dc; font-size: .92rem; font-weight: 600; text-decoration: none; transition: color .18s, background .18s; }
     .sidebar-link svg { width: 20px; height: 20px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
     .sidebar-link:hover, .sidebar-link.active { color: #fff; background: rgba(242,185,22,.16); }
@@ -37,6 +41,7 @@
         <a class="sidebar-link {{ $activeAdminPage === 'dashboard' ? 'active' : '' }}" href="{{ route('admin.dashboard') }}"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="5" rx="2"></rect><rect x="13" y="10" width="8" height="11" rx="2"></rect><rect x="3" y="13" width="8" height="8" rx="2"></rect></svg>نظرة عامة</a>
         <a class="sidebar-link {{ $activeAdminPage === 'homepage' ? 'active' : '' }}" href="{{ route('admin.homepage.edit') }}"><svg viewBox="0 0 24 24"><path d="M3 5h18v14H3zM3 9h18M8 5v14"></path></svg>الصفحة الرئيسية</a>
         <a class="sidebar-link {{ $activeAdminPage === 'investment' ? 'active' : '' }}" href="{{ route('admin.investment.edit') }}"><svg viewBox="0 0 24 24"><path d="M3 3v18h18M7 14l4-4 3 3 6-7M16 6h4v4"></path></svg>الاستثمار العقاري</a>
+        <a class="sidebar-link {{ $activeAdminPage === 'social-links' ? 'active' : '' }}" href="{{ route('admin.social-links.edit') }}"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.7 10.7 6.6-4.4m-6.6 9.4 6.6 2.6"></path></svg>روابط السوشيال ميديا</a>
         @foreach (\App\Models\ServicePageSetting::labels() as $sectionSlug => $sectionLabel)
             <a class="sidebar-link {{ $activeAdminPage === 'service-' . $sectionSlug ? 'active' : '' }}" href="{{ route('admin.service-pages.edit', $sectionSlug) }}"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l8-4v18M13 10h6v11"></path></svg>{{ $sectionLabel }}</a>
         @endforeach
