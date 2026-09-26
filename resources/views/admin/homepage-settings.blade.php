@@ -74,22 +74,12 @@
         @media(max-width:900px) { .admin-shell { grid-template-columns: 210px minmax(0,1fr); } .hero-uploads { grid-template-columns: 1fr; } }
         @media(max-width:720px) { .admin-shell { display: block; } .admin-sidebar { position: relative; height: auto; padding: 12px 16px; } .admin-brand { padding: 0; border: 0; } .sidebar-label, .sidebar-nav { display: none; } .sidebar-bottom { position: absolute; top: 12px; left: 14px; margin: 0; padding: 0; border: 0; } .logout-button { width: auto; padding: 10px; font-size: 0; } .logout-button svg { width: 22px; height: 22px; } .topbar { min-height: 64px; padding: 0 18px; } .settings-content { padding: 20px 14px 35px; } .page-intro { align-items: flex-start; flex-direction: column; } .page-intro .save-button { display: none; } .section-body { padding: 16px; } }
         @media(max-width:520px) { .form-grid, .section-editor { grid-template-columns: 1fr; } .section-editor-title, .form-group.full { grid-column: auto; } .upload-card { grid-template-columns: 112px minmax(0,1fr); gap: 11px; } .upload-preview { height: 94px; } .upload-preview.logo-preview { height: 94px; } }
+        @include('admin.partials.form-controls')
     </style>
 </head>
 <body>
     <div class="admin-shell">
-        <aside class="admin-sidebar">
-            <a class="admin-brand" href="{{ route('admin.dashboard') }}"><span class="admin-brand-mark"><img src="{{ asset('favicon.ico') }}" alt=""></span><span><strong>العوني العقارية</strong><small>لوحة الإدارة</small></span></a>
-            <p class="sidebar-label">إدارة الموقع</p>
-            <nav class="sidebar-nav" aria-label="قائمة الإدارة">
-                <a class="sidebar-link" href="{{ route('admin.dashboard') }}"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="5" rx="2"></rect><rect x="13" y="10" width="8" height="11" rx="2"></rect><rect x="3" y="13" width="8" height="8" rx="2"></rect></svg>لوحة التحكم</a>
-                <a class="sidebar-link active" href="{{ route('admin.homepage.edit') }}"><svg viewBox="0 0 24 24"><path d="M3 5h18v14H3zM3 9h18M8 5v14"></path></svg>الصفحة الرئيسية</a>
-            </nav>
-            <div class="sidebar-bottom">
-                <a class="sidebar-link" href="{{ route('landing') }}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7M5 9v12h14V9M9 21v-7h6v7"></path></svg>عرض الموقع</a>
-                <form class="logout-form" method="POST" action="{{ route('logout') }}">@csrf<button class="logout-button" type="submit"><svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5M15 12H3"></path><path d="M12 3h6a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3h-6"></path></svg>تسجيل الخروج</button></form>
-            </div>
-        </aside>
+        @include('admin.partials.sidebar', ['activeAdminPage' => 'homepage'])
 
         <main class="admin-main">
             <header class="topbar"><div><h1>إعدادات الصفحة الرئيسية</h1><small>تعديل محتوى الموقع الظاهر للزوار</small></div><a href="{{ route('landing') }}" target="_blank" rel="noopener">معاينة الموقع ↗</a></header>

@@ -804,11 +804,9 @@
 
     <div class="hero-section">
         <div class="background-slider" id="backgroundSlider">
-            <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=90');"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=90');"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=90');"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=90');"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=90');"></div>
+            @foreach ($investment['hero_images'] as $index => $image)
+                <div class="slide {{ $index === 0 ? 'active' : '' }}" style="background-image: url('{{ $image }}');"></div>
+            @endforeach
         </div>
 
         <div class="hero-overlay"></div>
@@ -852,44 +850,16 @@
     </div>
 
     <div class="content-section max-w-6xl mx-auto">
-        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">خدماتنا في الاستثمار العقاري</h2>
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">{{ $investment['services_heading'] }}</h2>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="feature-card">
-                <div class="icon-wrapper">📈</div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">تحليل السوق</h3>
-                <p class="text-gray-600">دراسات شاملة لتحليل اتجاهات السوق وتحديد أفضل الفرص الاستثمارية</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="icon-wrapper">🏘️</div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">إدارة المحافظ</h3>
-                <p class="text-gray-600">إدارة احترافية لمحافظك العقارية لتحقيق أعلى عوائد الاستثمار</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="icon-wrapper">💰</div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">تمويل الاستثمار</h3>
-                <p class="text-gray-600">حلول تمويلية مبتكرة لدعم مشاريعك الاستثمارية العقارية</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="icon-wrapper">🔍</div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">دراسات الجدوى</h3>
-                <p class="text-gray-600">إعداد دراسات جدوى اقتصادية وفنية دقيقة للمشاريع الاستثمارية</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="icon-wrapper">🌍</div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">استثمار دولي</h3>
-                <p class="text-gray-600">فرص استثمارية في أسواق عقارية عالمية واعدة ومربحة</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="icon-wrapper">📊</div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">تقارير دورية</h3>
-                <p class="text-gray-600">تقارير دورية شاملة عن أداء استثماراتك وتطورات السوق</p>
-            </div>
+            @foreach ($investment['services'] as $service)
+                <div class="feature-card">
+                    <div class="icon-wrapper">{{ $service['icon'] }}</div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $service['title'] }}</h3>
+                    <p class="text-gray-600">{{ $service['description'] }}</p>
+                </div>
+            @endforeach
         </div>
 
         <div class="mt-12 text-center">
@@ -944,80 +914,22 @@
     </div>
 
     <div class="projects-section">
-        <h2 class="text-3xl font-bold text-center">مجالات الاستثمار العقاري</h2>
+        <h2 class="text-3xl font-bold text-center">{{ $investment['areas_heading'] }}</h2>
 
         <div class="projects-grid">
-            <div class="project-card">
-                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="مبانٍ تجارية في مركز المدينة" class="project-image">
-                <div class="project-content">
-                    <h3 class="project-title">العقارات التجارية</h3>
-                    <p class="project-description">فرص في الأبراج والمكاتب والمساحات التجارية ضمن مواقع حيوية.</p>
-                    <div class="project-details">
-                        <span class="project-badge">تجاري</span>
-                        <span class="project-badge">تحليل السوق</span>
+            @foreach ($investment['investment_areas'] as $area)
+                <div class="project-card">
+                    <img src="{{ $area['image'] }}" alt="{{ $area['alt'] }}" class="project-image" loading="lazy">
+                    <div class="project-content">
+                        <h3 class="project-title">{{ $area['title'] }}</h3>
+                        <p class="project-description">{{ $area['description'] }}</p>
+                        <div class="project-details">
+                            <span class="project-badge">{{ $area['badge1'] }}</span>
+                            <span class="project-badge">{{ $area['badge2'] }}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="project-card">
-                <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="مجمع سكني حديث" class="project-image">
-                <div class="project-content">
-                    <h3 class="project-title">المجمعات السكنية</h3>
-                    <p class="project-description">دراسة فرص المجمعات والوحدات السكنية لتناسب أهداف المحفظة.</p>
-                    <div class="project-details">
-                        <span class="project-badge">سكني</span>
-                        <span class="project-badge">إدارة الأصول</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="project-card">
-                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="منزل معروض للبيع كفرصة عقارية" class="project-image">
-                <div class="project-content">
-                    <h3 class="project-title">العقارات السكنية</h3>
-                    <p class="project-description">تقييم الوحدات السكنية ومقارنتها وفق الموقع والقيمة والطلب.</p>
-                    <div class="project-details">
-                        <span class="project-badge">وحدات</span>
-                        <span class="project-badge">دراسة جدوى</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="project-card">
-                <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="فيلا ضمن سوق العقارات الفاخرة" class="project-image">
-                <div class="project-content">
-                    <h3 class="project-title">العقارات الفندقية</h3>
-                    <p class="project-description">استكشاف الأصول الفندقية والسياحية ودراسة ملاءمتها للاستثمار.</p>
-                    <div class="project-details">
-                        <span class="project-badge">ضيافة</span>
-                        <span class="project-badge">فرص متنوعة</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="project-card">
-                <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="مساحة داخلية حديثة قابلة للاستثمار" class="project-image">
-                <div class="project-content">
-                    <h3 class="project-title">الأصول متعددة الاستخدام</h3>
-                    <p class="project-description">تحليل الأصول التي تجمع بين الاستخدامات السكنية والتجارية والخدمية.</p>
-                    <div class="project-details">
-                        <span class="project-badge">متعدد الاستخدام</span>
-                        <span class="project-badge">تنويع</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="project-card">
-                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="عقار حديث ضمن فرص الاستثمار" class="project-image">
-                <div class="project-content">
-                    <h3 class="project-title">الفرص العقارية الدولية</h3>
-                    <p class="project-description">دراسة أسواق عقارية متنوعة ومقارنة الفرص وفق معايير واضحة.</p>
-                    <div class="project-details">
-                        <span class="project-badge">دولي</span>
-                        <span class="project-badge">تحليل ومقارنة</span>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 

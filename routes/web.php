@@ -3,7 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomepageSettingsController;
+use App\Http\Controllers\Admin\InvestmentPageController;
+use App\Http\Controllers\Admin\ServicePageController;
 use App\Models\SiteSetting;
+use App\Models\InvestmentPageSetting;
+use App\Models\ServicePageSetting;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,23 +27,25 @@ Route::get('/', function () {
 
 // أقسام العوني العقارية
 Route::get('/real-estate-investment', function () {
-    return view('sections.real-estate-investment');
+    return view('sections.real-estate-investment', [
+        'investment' => InvestmentPageSetting::currentContent(),
+    ]);
 })->name('real-estate-investment');
 
 Route::get('/real-estate-development', function () {
-    return view('sections.real-estate-development');
+    return view('sections.managed-page', ['section' => 'real-estate-development', 'content' => ServicePageSetting::content('real-estate-development')]);
 })->name('real-estate-development');
 
 Route::get('/construction', function () {
-    return view('sections.construction');
+    return view('sections.managed-page', ['section' => 'construction', 'content' => ServicePageSetting::content('construction')]);
 })->name('construction');
 
 Route::get('/real-estate-marketing', function () {
-    return view('sections.real-estate-marketing');
+    return view('sections.managed-page', ['section' => 'real-estate-marketing', 'content' => ServicePageSetting::content('real-estate-marketing')]);
 })->name('real-estate-marketing');
 
 Route::get('/engineering-consultancy', function () {
-    return view('sections.engineering-consultancy');
+    return view('sections.managed-page', ['section' => 'engineering-consultancy', 'content' => ServicePageSetting::content('engineering-consultancy')]);
 })->name('engineering-consultancy');
 
 // الأخبار والمقالات المنشورة
@@ -67,4 +73,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/homepage', [HomepageSettingsController::class, 'edit'])->name('homepage.edit');
     Route::put('/homepage', [HomepageSettingsController::class, 'update'])->name('homepage.update');
+    Route::get('/investment', [InvestmentPageController::class, 'edit'])->name('investment.edit');
+    Route::put('/investment', [InvestmentPageController::class, 'update'])->name('investment.update');
+    Route::get('/sections/{section}', [ServicePageController::class, 'edit'])->name('service-pages.edit');
+    Route::put('/sections/{section}', [ServicePageController::class, 'update'])->name('service-pages.update');
 });
