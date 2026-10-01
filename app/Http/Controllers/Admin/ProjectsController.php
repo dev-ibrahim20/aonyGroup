@@ -57,10 +57,20 @@ class ProjectsController extends Controller
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Generate unique slug
+        $slug = Str::slug($request->title_en);
+        $originalSlug = $slug;
+        $counter = 1;
+        
+        while (Project::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
         $project = Project::create([
             'title_en' => $request->title_en,
             'title_ar' => $request->title_ar,
-            'slug' => Str::slug($request->title_en),
+            'slug' => $slug,
             'description_en' => $request->description_en,
             'description_ar' => $request->description_ar,
             'location' => $request->location,
@@ -75,44 +85,40 @@ class ProjectsController extends Controller
         // Handle main image upload
         if ($request->hasFile('main_image')) {
             $image = $request->file('main_image');
-            $path = $image->store('projects', 'public');
-            $url = Storage::url($path);
-            
-            $media = Media::create([
-                'mediable_type' => Project::class,
-                'mediable_id' => $project->id,
-                'type' => 'image',
-                'collection' => 'thumbnail',
-                'filename' => $image->getClientOriginalName(),
-                'path' => $path,
-                'url' => $url,
-                'mime_type' => $image->getMimeType(),
-                'size' => $image->getSize(),
-                'order' => 0,
-            ]);
-            
-            // Update project with main image ID
-            $project->update(['main_image_id' => $media->id]);
+            if ($image && $image->isValid()) {
+                $path = $image->store('projects', 'public');
+                $url = Storage::url($path);
+                
+                $media = Media::create([
+                    'mediable_type' => Project::class,
+                    'mediable_id' => $project->id,
+                    'type' => 'image',
+                    'collection' => 'thumbnail',
+                    'url' => $url,
+                    'order' => 0,
+                ]);
+                
+                // Update project with main image ID
+                $project->update(['main_image_id' => $media->id]);
+            }
         }
 
         // Handle gallery images upload
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $index => $image) {
-                $path = $image->store('projects/gallery', 'public');
-                $url = Storage::url($path);
-                
-                Media::create([
-                    'mediable_type' => Project::class,
-                    'mediable_id' => $project->id,
-                    'type' => 'image',
-                    'collection' => 'gallery',
-                    'filename' => $image->getClientOriginalName(),
-                    'path' => $path,
-                    'url' => $url,
-                    'mime_type' => $image->getMimeType(),
-                    'size' => $image->getSize(),
-                    'order' => $index + 1, // Start from 1 to avoid conflict with main image (order 0)
-                ]);
+                if ($image && $image->isValid()) {
+                    $path = $image->store('projects/gallery', 'public');
+                    $url = Storage::url($path);
+                    
+                    Media::create([
+                        'mediable_type' => Project::class,
+                        'mediable_id' => $project->id,
+                        'type' => 'image',
+                        'collection' => 'gallery',
+                        'url' => $url,
+                        'order' => $index + 1, // Start from 1 to avoid conflict with main image (order 0)
+                    ]);
+                }
             }
         }
 
@@ -183,30 +189,41 @@ class ProjectsController extends Controller
             }
             
             $image = $request->file('main_image');
-            $path = $image->store('projects', 'public');
-            $url = Storage::url($path);
+            if ($image && $image->isValid()) {
+                $path = $image->store('projects', 'public');
+                $url = Storage::url($path);
+                
+                $media = Media::create([
+                    'mediable_type' => Project::class,
+                    'mediable_id' => $project->id,
+                    'type' => 'image',
+                    'collection' => 'thumbnail',
+                    'url' => $url,
+                    'order' => 0,
+                ]);
+                
+                $mainImageId = $media->id;
+            }
+        }
+
+        // Generate unique slug if title changed
+        $slug = $project->slug;
+        if ($request->title_en !== $project->title_en) {
+            $slug = Str::slug($request->title_en);
+            $originalSlug = $slug;
+            $counter = 1;
             
-            $media = Media::create([
-                'mediable_type' => Project::class,
-                'mediable_id' => $project->id,
-                'type' => 'image',
-                'collection' => 'thumbnail',
-                'filename' => $image->getClientOriginalName(),
-                'path' => $path,
-                'url' => $url,
-                'mime_type' => $image->getMimeType(),
-                'size' => $image->getSize(),
-                'order' => 0,
-            ]);
-            
-            $mainImageId = $media->id;
+            while (Project::where('slug', $slug)->where('id', '!=', $project->id)->exists()) {
+                $slug = $originalSlug . '-' . $counter;
+                $counter++;
+            }
         }
 
         // Update project data
         $project->update([
             'title_en' => $request->title_en,
             'title_ar' => $request->title_ar,
-            'slug' => Str::slug($request->title_en),
+            'slug' => $slug,
             'description_en' => $request->description_en,
             'description_ar' => $request->description_ar,
             'location' => $request->location,
@@ -222,21 +239,19 @@ class ProjectsController extends Controller
         if ($request->hasFile('gallery_images')) {
             $maxOrder = $project->gallery()->max('order') ?? 0;
             foreach ($request->file('gallery_images') as $index => $image) {
-                $path = $image->store('projects/gallery', 'public');
-                $url = Storage::url($path);
-                
-                Media::create([
-                    'mediable_type' => Project::class,
-                    'mediable_id' => $project->id,
-                    'type' => 'image',
-                    'collection' => 'gallery',
-                    'filename' => $image->getClientOriginalName(),
-                    'path' => $path,
-                    'url' => $url,
-                    'mime_type' => $image->getMimeType(),
-                    'size' => $image->getSize(),
-                    'order' => $maxOrder + $index + 1,
-                ]);
+                if ($image && $image->isValid()) {
+                    $path = $image->store('projects/gallery', 'public');
+                    $url = Storage::url($path);
+                    
+                    Media::create([
+                        'mediable_type' => Project::class,
+                        'mediable_id' => $project->id,
+                        'type' => 'image',
+                        'collection' => 'gallery',
+                        'url' => $url,
+                        'order' => $maxOrder + $index + 1,
+                    ]);
+                }
             }
         }
 

@@ -99,6 +99,7 @@
                         <li><a class="aony-dropdown-link" href="{{ route('engineering-consultancy') }}"><span class="aony-dropdown-icon"><svg viewBox="0 0 24 24"><path d="M4 21V5l8-3 8 3v16M2 21h20M8 9h2m4 0h2m-8 4h2m4 0h2m-5 8v-4h4v4"/></svg></span><span class="aony-dropdown-copy"><strong>الاستشارات الهندسية</strong><small>تصميم ودراسات وإشراف</small></span></a></li>
                     </ul>
                 </li>
+                <li><a class="aony-nav-link" href="{{ route('projects.index') }}">مشاريعنا</a></li>
                 <li><a class="aony-nav-link" href="{{ url('/#about') }}">من نحن</a></li>
                 <li><a class="aony-nav-link" href="{{ url('/#contact') }}">تواصل معنا</a></li>
                 <li><a class="aony-nav-link" href="{{ route('blog.index') }}">أخبارنا</a></li>

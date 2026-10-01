@@ -34,6 +34,7 @@
             <div>
                 <h4 class="text-lg font-bold mb-4 text-yellow-400">أقسامنا</h4>
                 <ul class="space-y-2">
+                    <li><a href="{{ route('projects.index') }}" class="text-gray-400 hover:text-yellow-400 transition-colors transform hover:translate-x-2 inline-block">مشاريعنا</a></li>
                     <li><a href="{{ url('/real-estate-investment') }}" class="text-gray-400 hover:text-yellow-400 transition-colors transform hover:translate-x-2 inline-block">الاستثمار العقاري</a></li>
                     <li><a href="{{ url('/real-estate-development') }}" class="text-gray-400 hover:text-yellow-400 transition-colors transform hover:translate-x-2 inline-block">التطوير العقاري</a></li>
                     <li><a href="{{ url('/construction') }}" class="text-gray-400 hover:text-yellow-400 transition-colors transform hover:translate-x-2 inline-block">المقاولات</a></li>

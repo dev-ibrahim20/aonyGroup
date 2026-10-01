@@ -52,12 +52,14 @@ class UnitsController extends Controller
     /**
      * Show the form for creating a new unit.
      */
-    public function create()
+    public function create(Request $request)
     {
         $projects = Project::pluck('title_en', 'id');
+        $selectedProjectId = $request->input('project_id');
         
         return view('admin.units.create', [
             'projects' => $projects,
+            'selectedProjectId' => $selectedProjectId,
             'pageTitle' => 'Create Unit'
         ]);
     }
@@ -83,11 +85,21 @@ class UnitsController extends Controller
             'display_image_id' => 'nullable|exists:media,id',
         ]);
 
+        // Generate unique slug
+        $slug = Str::slug($request->title_en);
+        $originalSlug = $slug;
+        $counter = 1;
+        
+        while (Unit::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
         $unit = Unit::create([
             'project_id' => $request->project_id,
             'title_en' => $request->title_en,
             'title_ar' => $request->title_ar,
-            'slug' => Str::slug($request->title_en),
+            'slug' => $slug,
             'description_en' => $request->description_en,
             'description_ar' => $request->description_ar,
             'price' => $request->price,
@@ -159,11 +171,24 @@ class UnitsController extends Controller
             'display_image_id' => 'nullable|exists:media,id',
         ]);
 
+        // Generate unique slug if title changed
+        $slug = $unit->slug;
+        if ($request->title_en !== $unit->title_en) {
+            $slug = Str::slug($request->title_en);
+            $originalSlug = $slug;
+            $counter = 1;
+            
+            while (Unit::where('slug', $slug)->where('id', '!=', $unit->id)->exists()) {
+                $slug = $originalSlug . '-' . $counter;
+                $counter++;
+            }
+        }
+
         $unit->update([
             'project_id' => $request->project_id,
             'title_en' => $request->title_en,
             'title_ar' => $request->title_ar,
-            'slug' => Str::slug($request->title_en),
+            'slug' => $slug,
             'description_en' => $request->description_en,
             'description_ar' => $request->description_ar,
             'price' => $request->price,

@@ -6,6 +6,10 @@ use App\Http\Controllers\Admin\HomepageSettingsController;
 use App\Http\Controllers\Admin\InvestmentPageController;
 use App\Http\Controllers\Admin\ServicePageController;
 use App\Http\Controllers\Admin\SocialLinksController;
+use App\Http\Controllers\Admin\ProjectsController;
+use App\Http\Controllers\Admin\UnitsController;
+use App\Http\Controllers\Admin\LeadsController;
+use App\Http\Controllers\ProjectController;
 use App\Models\SiteSetting;
 use App\Models\InvestmentPageSetting;
 use App\Models\ServicePageSetting;
@@ -68,6 +72,10 @@ Route::get('/blog/{slug}', function (string $slug) {
     return view('blog.show', compact('post'));
 })->name('blog.show');
 
+// Projects pages
+Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
+
 require __DIR__ . '/auth.php';
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
@@ -80,4 +88,35 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/sections/{section}', [ServicePageController::class, 'update'])->name('service-pages.update');
     Route::get('/social-links', [SocialLinksController::class, 'edit'])->name('social-links.edit');
     Route::put('/social-links', [SocialLinksController::class, 'update'])->name('social-links.update');
+    
+    // Projects routes
+    Route::prefix('projects')->name('projects.')->group(function () {
+        Route::get('/', [ProjectsController::class, 'index'])->name('index');
+        Route::get('/create', [ProjectsController::class, 'create'])->name('create');
+        Route::post('/', [ProjectsController::class, 'store'])->name('store');
+        Route::get('/{project}', [ProjectsController::class, 'show'])->name('show');
+        Route::get('/{project}/edit', [ProjectsController::class, 'edit'])->name('edit');
+        Route::put('/{project}', [ProjectsController::class, 'update'])->name('update');
+        Route::delete('/{project}', [ProjectsController::class, 'destroy'])->name('destroy');
+    });
+    
+    // Units routes
+    Route::prefix('units')->name('units.')->group(function () {
+        Route::get('/', [UnitsController::class, 'index'])->name('index');
+        Route::get('/create', [UnitsController::class, 'create'])->name('create');
+        Route::post('/', [UnitsController::class, 'store'])->name('store');
+        Route::get('/{unit}', [UnitsController::class, 'show'])->name('show');
+        Route::get('/{unit}/edit', [UnitsController::class, 'edit'])->name('edit');
+        Route::put('/{unit}', [UnitsController::class, 'update'])->name('update');
+        Route::delete('/{unit}', [UnitsController::class, 'destroy'])->name('destroy');
+    });
+    
+    // Leads routes
+    Route::prefix('leads')->name('leads.')->group(function () {
+        Route::get('/', [LeadsController::class, 'index'])->name('index');
+        Route::post('/', [LeadsController::class, 'store'])->name('store');
+        Route::get('/{lead}', [LeadsController::class, 'show'])->name('show');
+        Route::put('/{lead}', [LeadsController::class, 'update'])->name('update');
+        Route::delete('/{lead}', [LeadsController::class, 'destroy'])->name('destroy');
+    });
 });
